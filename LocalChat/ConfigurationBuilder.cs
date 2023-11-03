@@ -32,9 +32,7 @@ public class ConfigurationBuilder
     {
         services.AddDbContext<LocalChatDbContext>(ctx =>
         {
-            ctx.UseSqlite(_config.GetConnectionString("DefaultConnection"));
+            ctx.UseSqlite(_config.GetConnectionString("LocalChatDbConnection"));
         });
     }
-    
-    
 }
