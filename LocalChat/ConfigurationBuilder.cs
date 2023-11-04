@@ -1,4 +1,7 @@
-﻿using Infrastructure;
+﻿using Core.Repository;
+using Infrastructure;
+using Infrastructure.Repository;
+using LocalChat.Controller;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,5 +37,9 @@ public class ConfigurationBuilder
         {
             ctx.UseSqlite(_config.GetConnectionString("LocalChatDbConnection"));
         });
+        services.AddHostedService<ServerController>();
+        services.AddHostedService<ClientController>();
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
     }
 }

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(LocalChatDbContext))]
-    [Migration("20231103212355_Initial")]
+    [Migration("20231104025020_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -22,9 +22,9 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Model.Role", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
@@ -38,14 +38,17 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("Core.Model.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
@@ -63,16 +66,19 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Username")
+                        .IsUnique();
+
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("RoleUser", b =>
                 {
-                    b.Property<int>("RolesId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("RolesId")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("UsersId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("UsersId")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("RolesId", "UsersId");
 
