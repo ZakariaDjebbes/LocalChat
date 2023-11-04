@@ -1,4 +1,6 @@
-﻿using Core.Repository;
+﻿using Business.Service;
+using Core.Repository;
+using Core.Service;
 using Infrastructure;
 using Infrastructure.Repository;
 using LocalChat.Controller;
@@ -37,8 +39,10 @@ public class ConfigurationBuilder
         {
             ctx.UseSqlite(_config.GetConnectionString("LocalChatDbConnection"));
         });
-        services.AddHostedService<ServerController>();
-        services.AddHostedService<ClientController>();
+        services.AddHostedService<ConsoleInterfaceController>();
+        services.AddScoped<IConsoleService, ConsoleService>();
+        services.AddScoped<IClientService, ClientService>();
+        services.AddScoped<IServerService, ServerService>();
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
     }

@@ -17,4 +17,8 @@ public class User : IEntity
     /// The roles of the user.
     /// </summary>
     public ICollection<Role> Roles { get; init; } = new List<Role>();
+    /// <summary>
+    /// The servers the user is a member of.
+    /// </summary>
+    public ICollection<Server> Servers { get; init; } = new List<Server>();
 }

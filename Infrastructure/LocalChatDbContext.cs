@@ -8,6 +8,7 @@ public sealed class LocalChatDbContext : DbContext
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Role> Roles { get; set; }
+    public DbSet<Server> Servers { get; set; }
 
     public LocalChatDbContext(DbContextOptions<LocalChatDbContext> options) : base(options)
     {
