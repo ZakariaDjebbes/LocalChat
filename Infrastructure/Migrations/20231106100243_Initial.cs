@@ -16,7 +16,7 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
@@ -26,12 +26,29 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Servers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
+                    Address = table.Column<string>(type: "TEXT", nullable: true),
+                    Port = table.Column<int>(type: "INTEGER", nullable: false),
+                    IsRunning = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Servers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Username = table.Column<string>(type: "TEXT", nullable: false),
-                    Password = table.Column<string>(type: "TEXT", nullable: false),
+                    Username = table.Column<string>(type: "TEXT", nullable: true),
+                    Password = table.Column<string>(type: "TEXT", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
@@ -64,6 +81,30 @@ namespace Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ServerUser",
+                columns: table => new
+                {
+                    ServersId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    UsersId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServerUser", x => new { x.ServersId, x.UsersId });
+                    table.ForeignKey(
+                        name: "FK_ServerUser_Servers_ServersId",
+                        column: x => x.ServersId,
+                        principalTable: "Servers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ServerUser_Users_UsersId",
+                        column: x => x.UsersId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Roles_Name",
                 table: "Roles",
@@ -73,6 +114,23 @@ namespace Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_RoleUser_UsersId",
                 table: "RoleUser",
+                column: "UsersId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Servers_Address_Port",
+                table: "Servers",
+                columns: new[] { "Address", "Port" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Servers_Name",
+                table: "Servers",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ServerUser_UsersId",
+                table: "ServerUser",
                 column: "UsersId");
 
             migrationBuilder.CreateIndex(
@@ -89,7 +147,13 @@ namespace Infrastructure.Migrations
                 name: "RoleUser");
 
             migrationBuilder.DropTable(
+                name: "ServerUser");
+
+            migrationBuilder.DropTable(
                 name: "Roles");
+
+            migrationBuilder.DropTable(
+                name: "Servers");
 
             migrationBuilder.DropTable(
                 name: "Users");

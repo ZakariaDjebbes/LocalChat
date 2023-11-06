@@ -8,9 +8,10 @@ public class Repository<T> : IRepository<T> where T : class, IEntity
 {
     private readonly LocalChatDbContext _dbContext;
     
-    public Repository(LocalChatDbContext dbContext)
+    public Repository(IDbContextFactory<LocalChatDbContext> dbContextFactory)
     {
-        _dbContext = dbContext;
+        
+        _dbContext = dbContextFactory.CreateDbContext();
     }
     
     public void Add(T entity) => _dbContext.Set<T>().Add(entity);

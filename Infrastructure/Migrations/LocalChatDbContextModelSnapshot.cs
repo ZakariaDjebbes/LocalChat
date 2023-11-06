@@ -89,9 +89,6 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("ServerId")
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
 
@@ -99,8 +96,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ServerId");
 
                     b.HasIndex("Username")
                         .IsUnique();
@@ -123,11 +118,19 @@ namespace Infrastructure.Migrations
                     b.ToTable("RoleUser");
                 });
 
-            modelBuilder.Entity("Core.Model.User", b =>
+            modelBuilder.Entity("ServerUser", b =>
                 {
-                    b.HasOne("Core.Model.Server", null)
-                        .WithMany("Users")
-                        .HasForeignKey("ServerId");
+                    b.Property<Guid>("ServersId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UsersId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ServersId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("ServerUser");
                 });
 
             modelBuilder.Entity("RoleUser", b =>
@@ -145,9 +148,19 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Core.Model.Server", b =>
+            modelBuilder.Entity("ServerUser", b =>
                 {
-                    b.Navigation("Users");
+                    b.HasOne("Core.Model.Server", null)
+                        .WithMany()
+                        .HasForeignKey("ServersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Model.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

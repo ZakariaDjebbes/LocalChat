@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(LocalChatDbContext))]
-    [Migration("20231104025020_Initial")]
+    [Migration("20231106100243_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -30,7 +30,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -44,6 +43,43 @@ namespace Infrastructure.Migrations
                     b.ToTable("Roles");
                 });
 
+            modelBuilder.Entity("Core.Model.Server", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsRunning")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Port")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("Address", "Port")
+                        .IsUnique();
+
+                    b.ToTable("Servers");
+                });
+
             modelBuilder.Entity("Core.Model.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -54,14 +90,12 @@ namespace Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Username")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -87,11 +121,41 @@ namespace Infrastructure.Migrations
                     b.ToTable("RoleUser");
                 });
 
+            modelBuilder.Entity("ServerUser", b =>
+                {
+                    b.Property<Guid>("ServersId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UsersId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ServersId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("ServerUser");
+                });
+
             modelBuilder.Entity("RoleUser", b =>
                 {
                     b.HasOne("Core.Model.Role", null)
                         .WithMany()
                         .HasForeignKey("RolesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Model.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ServerUser", b =>
+                {
+                    b.HasOne("Core.Model.Server", null)
+                        .WithMany()
+                        .HasForeignKey("ServersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

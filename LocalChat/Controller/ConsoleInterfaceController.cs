@@ -1,41 +1,32 @@
 ﻿using Core.Model;
+using Core.Repository;
 using Core.Service;
+using Infrastructure.Repository;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ZConsole.Service;
 
 namespace LocalChat.Controller;
 
 public class ConsoleInterfaceController : IHostedService
 {
+    private readonly IConsolePromptService _consolePromptService;
     private readonly IConsoleService _consoleService;
     private readonly IServerService _serverService;
-    private readonly IClientService _clientService;
-
-    public ConsoleInterfaceController(IConsoleService consoleService,
-        IServerService serverService,
-        IClientService clientService)
+    private readonly IUnitOfWork _unitOfWork;
+    
+    public ConsoleInterfaceController(IServiceProvider serviceProvider)
     {
-        _consoleService = consoleService;
-        _serverService = serverService;
-        _clientService = clientService;
+        _consolePromptService = serviceProvider.GetRequiredService<IConsolePromptService>();
+        _consoleService = serviceProvider.GetRequiredService<IConsoleService>();
+        _serverService = serviceProvider.GetRequiredService<IServerService>();
+        _unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _consoleService.LogInfo("My Console App started. Enter 'exit' to quit.");
-        _serverService.Initialize(new Server { Port = 5000, Address = "127.0.0.1", Name = "My Server" });
-        Task.Run(() => _serverService.Start(), cancellationToken);
-        _clientService.Connect("127.0.0.1", 5000);
-
-        while (true)
-        {
-            var input = _consoleService.ReadLine();
-            if (string.Equals(input, "exit", StringComparison.OrdinalIgnoreCase))
-                break;
-            _clientService.Send(input);
-        }
-
-        _consoleService.LogInfo("My Console App stopped.");
-
+        _consoleService.LogInfo("Welcome to LocalChat!");
+        
         return Task.CompletedTask;
     }
 

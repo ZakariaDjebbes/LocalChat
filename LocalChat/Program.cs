@@ -15,7 +15,7 @@ internal static class Program
         
         // var services = scope.ServiceProvider;
         // var logger = services.GetRequiredService<ILogger<Program>>();
-
+        
         host.Run();
     }
 

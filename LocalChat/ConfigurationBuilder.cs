@@ -7,6 +7,8 @@ using LocalChat.Controller;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ZConsole.Implementation;
+using ZConsole.Service;
 
 namespace LocalChat;
 
@@ -35,15 +37,16 @@ public class ConfigurationBuilder
     /// <param name="services">The services collection</param>
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddDbContext<LocalChatDbContext>(ctx =>
+        services.AddDbContextFactory<LocalChatDbContext>(ctx =>
         {
             ctx.UseSqlite(_config.GetConnectionString("LocalChatDbConnection"));
         });
         services.AddHostedService<ConsoleInterfaceController>();
         services.AddScoped<IConsoleService, ConsoleService>();
+        services.AddScoped<IConsolePromptService, ConsolePromptService>();
         services.AddScoped<IClientService, ClientService>();
         services.AddScoped<IServerService, ServerService>();
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 }

@@ -16,11 +16,13 @@
       <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
       <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
       <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+      <PackageReference Include="Sharprompt" Version="2.4.5" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Business\Business.csproj" />
       <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+      <ProjectReference Include="..\ZConsole\ZConsole.csproj" />
     </ItemGroup>
 
     <ItemGroup>

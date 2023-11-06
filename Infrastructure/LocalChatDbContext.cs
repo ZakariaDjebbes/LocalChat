@@ -12,7 +12,6 @@ public sealed class LocalChatDbContext : DbContext
 
     public LocalChatDbContext(DbContextOptions<LocalChatDbContext> options) : base(options)
     {
-        Database.EnsureCreated();
     }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
