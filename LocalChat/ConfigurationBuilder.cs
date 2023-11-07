@@ -1,4 +1,6 @@
-﻿using Business.Service;
+﻿using Business.Command;
+using Business.Service;
+using Core.Command;
 using Core.Repository;
 using Core.Service;
 using Infrastructure;
@@ -29,8 +31,8 @@ public class ConfigurationBuilder
     public ConfigurationBuilder(IConfiguration config)
     {
         _config = config;
-    }   
-    
+    }
+
     /// <summary>
     /// This method gets called by the runtime. Use this method to add services to the container.
     /// </summary>
@@ -39,14 +41,23 @@ public class ConfigurationBuilder
     {
         services.AddDbContextFactory<LocalChatDbContext>(ctx =>
         {
-            ctx.UseSqlite(_config.GetConnectionString("LocalChatDbConnection"));
+            //mysql
+            ctx.UseMySql(_config.GetConnectionString("LocalChatDbConnection"), new MySqlServerVersion(new Version(8, 2, 0)));
+            // ctx.UseSqlite(_config.GetConnectionString("LocalChatDbConnection"));
         });
+        // Runners
         services.AddHostedService<ConsoleInterfaceController>();
+        // Console services
         services.AddScoped<IConsoleService, ConsoleService>();
         services.AddScoped<IConsolePromptService, ConsolePromptService>();
-        services.AddScoped<IClientService, ClientService>();
+        // Server services 
         services.AddScoped<IServerService, ServerService>();
+        // Command services
+        services.AddScoped<ICommandExecutor, CommandExecutor>();
+        services.AddScoped<ICommand, SignInCommand>();
+        services.AddScoped<ICommand, SignUpCommand>();
+        services.AddScoped<ICommand, ListUsersCommand>();
+        // Repository services
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 }

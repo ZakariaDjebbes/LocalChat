@@ -17,11 +17,36 @@ public class ConsolePromptService : IConsolePromptService
         return _consoleService.ReadLine();
     }
 
-    public string PromptOrDefault(string promptMessage, string defaultValue = "")
+    public string PromptLine(string promptMessage)
+    {
+        _consoleService.Log(promptMessage, true);
+        return _consoleService.ReadLine();
+    }
+
+    public string Password(string promptMessage)
+    {
+        _consoleService.Log(promptMessage, false);
+        return _consoleService.ReadPassword();
+    }
+
+    public string PasswordLine(string promptMessage)
+    {
+        _consoleService.Log(promptMessage, true);
+        return _consoleService.ReadPassword();
+    }
+
+    public string PromptOrDefault(string promptMessage)
     {
         _consoleService.Log(promptMessage, false);
         var input = _consoleService.ReadLine();
-        return string.IsNullOrWhiteSpace(input) ? defaultValue : input;
+        return string.IsNullOrWhiteSpace(input) ? "" : input;
+    }
+
+    public string PromptPasswordOrDefault(string promptMessage)
+    {
+        _consoleService.Log(promptMessage, false);
+        var input = _consoleService.ReadPassword();
+        return string.IsNullOrWhiteSpace(input) ? "" : input;
     }
 
     public T Prompt<T>(string promptMessage)
@@ -31,11 +56,11 @@ public class ConsolePromptService : IConsolePromptService
         return (T) Convert.ChangeType(input, typeof(T));
     }
 
-    public T PromptOrDefault<T>(string promptMessage, T defaultValue = default)
+    public T PromptOrDefault<T>(string promptMessage)
     {
         _consoleService.Log(promptMessage, false);
         var input = _consoleService.ReadLine();
-        return string.IsNullOrWhiteSpace(input) ? defaultValue : (T) Convert.ChangeType(input, typeof(T));
+        return string.IsNullOrWhiteSpace(input) ? default : (T) Convert.ChangeType(input, typeof(T));
     }
 
     public T Prompt<T>(string promptMessage, Func<string, T> converter)
@@ -45,11 +70,11 @@ public class ConsolePromptService : IConsolePromptService
         return converter(input);
     }
 
-    public T PromptOrDefault<T>(string promptMessage, Func<string, T> converter, T defaultValue = default)
+    public T PromptOrDefault<T>(string promptMessage, Func<string, T> converter)
     {
         _consoleService.Log(promptMessage, false);
         var input = _consoleService.ReadLine();
-        return string.IsNullOrWhiteSpace(input) ? defaultValue : converter(input);
+        return string.IsNullOrWhiteSpace(input) ? default : converter(input);
     }
 
     public int Choose(string promptMessage, IEnumerable<string> choices, bool keepPrompt = false)

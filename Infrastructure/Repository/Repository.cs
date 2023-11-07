@@ -10,7 +10,6 @@ public class Repository<T> : IRepository<T> where T : class, IEntity
     
     public Repository(IDbContextFactory<LocalChatDbContext> dbContextFactory)
     {
-        
         _dbContext = dbContextFactory.CreateDbContext();
     }
     

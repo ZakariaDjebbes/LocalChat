@@ -12,6 +12,9 @@ public abstract class EntityConfiguration<T> : IEntityTypeConfiguration<T> where
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
         builder.Property(d => d.UpdatedAt)
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
+        builder.Property(d => d.Id)
+            .HasMaxLength(36);
+        builder.HasKey(d => d.Id);
     }
 
     protected abstract void Configure(EntityTypeBuilder<T> builder);

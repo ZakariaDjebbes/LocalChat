@@ -1,7 +1,4 @@
-﻿using Core.Model;
-using Core.Repository;
-using Core.Service;
-using Infrastructure.Repository;
+﻿using Core.Command;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ZConsole.Service;
@@ -12,20 +9,27 @@ public class ConsoleInterfaceController : IHostedService
 {
     private readonly IConsolePromptService _consolePromptService;
     private readonly IConsoleService _consoleService;
-    private readonly IServerService _serverService;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly ICommandExecutor _commandExecutor;
     
     public ConsoleInterfaceController(IServiceProvider serviceProvider)
     {
         _consolePromptService = serviceProvider.GetRequiredService<IConsolePromptService>();
         _consoleService = serviceProvider.GetRequiredService<IConsoleService>();
-        _serverService = serviceProvider.GetRequiredService<IServerService>();
-        _unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
+        _commandExecutor = serviceProvider.GetRequiredService<ICommandExecutor>();
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
         _consoleService.LogInfo("Welcome to LocalChat!");
+        _consoleService.LogInfo("Type 'help' to see a list of commands.");
+        
+        while (true)
+        {
+            var input = _consolePromptService.Prompt("[LocalChat#guest]>");
+            if (input == "help") _consoleService.Log(_commandExecutor.ToString());
+            else if(input == "exit") break;
+            else _commandExecutor.Execute(input);
+        }
         
         return Task.CompletedTask;
     }
