@@ -15,12 +15,4 @@ public interface ICommandExecutor
     /// The arguments to pass to the command.
     /// </param>
     public void Execute(string commandName, params object[] args);
-    
-    /// <summary>
-    /// Gets all available commands.
-    /// </summary>
-    /// <returns>
-    /// An enumerable of all available commands.
-    /// </returns>
-    public IEnumerable<ICommand> GetCommands();
 }

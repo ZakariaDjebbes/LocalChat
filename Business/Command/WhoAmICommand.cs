@@ -1,4 +1,5 @@
-﻿using Core.Command;
+﻿using Core.Auth;
+using Core.Command;
 using Core.Context;
 using ZConsole.Service;
 
@@ -9,6 +10,7 @@ public class WhoAmICommand : ICommand
     public string Name { get; init; }
     public string Description { get; init; }
     public string[] Aliases { get; init; }
+    public AuthenticationRequirement AuthenticationRequirement { get; }
 
     private readonly IUserContext _userContext;
     private readonly IConsoleService _consoleService;
@@ -18,18 +20,13 @@ public class WhoAmICommand : ICommand
         Name = "whoami";
         Description = "Displays the current user.";
         Aliases = new[] { "me" };
+        AuthenticationRequirement = AuthenticationRequirement.Authenticated;
         _userContext = userContext;
         _consoleService = consoleService;
     }
     
     public void Execute(params object[] args)
     {
-        if (!_userContext.IsAuthenticated())
-        {
-            _consoleService.LogWarning("You are not authenticated currently.");
-            return;
-        }
-        
         _consoleService.LogSuccess($"You are currently logged in as {_userContext.ContextResource.User.Username}.");
     }
 }

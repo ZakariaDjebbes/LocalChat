@@ -11,6 +11,7 @@ public class SignUpCommand : ICommand
     public string Name { get; init; }
     public string Description { get; init; }
     public string[] Aliases { get; init; }
+    public AuthenticationRequirement AuthenticationRequirement { get; }
 
     private readonly IConsoleService _consoleService;
     private readonly IConsolePromptService _consolePromptService;
@@ -25,6 +26,7 @@ public class SignUpCommand : ICommand
         Name = "sign-up";
         Description = "Signs up a new user.";
         Aliases = new[] { "register" };
+        AuthenticationRequirement = AuthenticationRequirement.Unauthenticated;
         _consoleService = consoleService;
         _consolePromptService = consolePromptService;
         _authenticationService = authenticationService;
@@ -33,12 +35,6 @@ public class SignUpCommand : ICommand
 
     public void Execute(params object[] args)
     {
-        if (_userContext.IsAuthenticated())
-        {
-            _consoleService.LogWarning("You are already authenticated.");
-            return;
-        }
-        
         var username = _consolePromptService.Prompt("Choose a username : ");
         var password = _consolePromptService.Password("Choose a password : ");
         var passwordConfirmation = _consolePromptService.Password("Confirm your password : ");

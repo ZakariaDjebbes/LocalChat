@@ -1,4 +1,5 @@
-﻿using Core.Command;
+﻿using Core.Auth;
+using Core.Command;
 using Core.Context;
 using Core.Service;
 using ZConsole.Service;
@@ -10,6 +11,7 @@ public class SignInCommand : ICommand
     public string Name { get; init; }
     public string Description { get; init; }
     public string[] Aliases { get; init; }
+    public AuthenticationRequirement AuthenticationRequirement { get; init; }
 
     private readonly IConsoleService _consoleService;
     private readonly IConsolePromptService _consolePromptService;
@@ -24,6 +26,8 @@ public class SignInCommand : ICommand
         Name = "sign-in";
         Description = "Signs in a user.";
         Aliases = new[] { "login" };
+        AuthenticationRequirement = AuthenticationRequirement.Unauthenticated;
+        
         _consoleService = consoleService;
         _consolePromptService = consolePromptService;
         _authenticationService = authenticationService;
@@ -32,12 +36,6 @@ public class SignInCommand : ICommand
 
     public void Execute(params object[] args)
     {
-        if (_userContext.IsAuthenticated())
-        {
-            _consoleService.LogWarning("You are already authenticated.");
-            return;
-        }
-        
         var username = _consolePromptService.Prompt("Username: ");
         var password = _consolePromptService.Password("Password: ");
 
