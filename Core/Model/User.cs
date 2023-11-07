@@ -6,11 +6,16 @@ public class User : IEntity
     /// <summary>
     /// The username of the user.
     /// </summary>
-    public string Username { get; set; } = string.Empty;
+    public string Username { get; set; }
     /// <summary>
-    /// The password of the user.
+    /// The hashed password of the user.
     /// </summary>
-    public string Password { get; set; } = string.Empty;
+    public string PasswordHash { get; set; }
+    /// <summary>
+    /// The salt used to hash the password.
+    /// </summary>
+
+    public string PasswordSalt { get; set; }
     public DateTime CreatedAt { get; init; }
     public DateTime UpdatedAt { get; init; }
     /// <summary>

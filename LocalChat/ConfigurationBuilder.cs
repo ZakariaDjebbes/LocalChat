@@ -1,6 +1,8 @@
 ﻿using Business.Command;
+using Business.Context;
 using Business.Service;
 using Core.Command;
+using Core.Context;
 using Core.Repository;
 using Core.Service;
 using Infrastructure;
@@ -41,22 +43,31 @@ public class ConfigurationBuilder
     {
         services.AddDbContextFactory<LocalChatDbContext>(ctx =>
         {
-            //mysql
             ctx.UseMySql(_config.GetConnectionString("LocalChatDbConnection"), new MySqlServerVersion(new Version(8, 2, 0)));
-            // ctx.UseSqlite(_config.GetConnectionString("LocalChatDbConnection"));
         });
+        // Context
+        services.AddSingleton<IUserContext, UserContext>();
+        
         // Runners
-        services.AddHostedService<ConsoleInterfaceController>();
+        services.AddHostedService<ConsoleInterfaceHost>();
+        
         // Console services
         services.AddScoped<IConsoleService, ConsoleService>();
         services.AddScoped<IConsolePromptService, ConsolePromptService>();
+        
         // Server services 
         services.AddScoped<IServerService, ServerService>();
+        
+        // Authentication services
+        services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddScoped<ITokenService, TokenService>();
+        
         // Command services
         services.AddScoped<ICommandExecutor, CommandExecutor>();
         services.AddScoped<ICommand, SignInCommand>();
         services.AddScoped<ICommand, SignUpCommand>();
-        services.AddScoped<ICommand, ListUsersCommand>();
+        services.AddScoped<ICommand, WhoAmICommand>();
+        services.AddScoped<ICommand, SignOutCommand>();
         // Repository services
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
     }

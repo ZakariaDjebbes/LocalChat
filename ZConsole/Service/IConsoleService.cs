@@ -36,6 +36,11 @@ public interface IConsoleService
     void Log(string message, bool newLine = true);
 
     /// <summary>
+    /// Writes a new line character to the standard output stream.
+    /// </summary>
+    void BreakLine();
+    
+    /// <summary>
     /// Writes the specified string value to the standard output stream with an information color.
     /// </summary>
     /// <param name="message">The value to write.</param>

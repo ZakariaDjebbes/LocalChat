@@ -24,15 +24,8 @@ public class CommandExecutor : ICommandExecutor
             _consoleService.LogError($"Command '{commandName}' not found.");
             return;
         }
-        
-        try
-        {
-            command.Execute(args);
-        }
-        catch (Exception e)
-        {
-            _consoleService.LogError(e.Message);
-        }
+
+        command.Execute(args);
     }
 
     public IEnumerable<ICommand> GetCommands()
@@ -43,18 +36,18 @@ public class CommandExecutor : ICommandExecutor
         var sb = new StringBuilder();
 
         sb.AppendLine("Available commands:");
-        
+
         _commands
             .OrderBy(c => c.Name)
             .ToList()
-            .ForEach(command => 
+            .ForEach(command =>
             {
                 var aliases = string.Join(" ", command.Aliases);
                 sb.AppendLine($"{command.Name} | {aliases} - {command.Description}");
             });
-        
+
         sb.AppendLine("help - Displays this message.");
-        
+
         return sb.ToString();
     }
 }

@@ -19,7 +19,7 @@ public class ConsolePromptService : IConsolePromptService
 
     public string PromptLine(string promptMessage)
     {
-        _consoleService.Log(promptMessage, true);
+        _consoleService.Log(promptMessage);
         return _consoleService.ReadLine();
     }
 
@@ -31,7 +31,7 @@ public class ConsolePromptService : IConsolePromptService
 
     public string PasswordLine(string promptMessage)
     {
-        _consoleService.Log(promptMessage, true);
+        _consoleService.Log(promptMessage);
         return _consoleService.ReadPassword();
     }
 
