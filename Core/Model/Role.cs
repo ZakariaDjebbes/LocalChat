@@ -1,16 +1,17 @@
 ﻿namespace Core.Model;
 
+/// <summary>
+///     Represents a role of a <see cref="User" /> in a <see cref="Server" />.
+/// </summary>
 public class Role : IEntity
 {
-    public Guid Id { get; init; }
     /// <summary>
-    /// The name of the role.
+    ///     The name of the role.
     /// </summary>
     public string Name { get; init; } = string.Empty;
-    public DateTime CreatedAt { get; init; }
-    public DateTime UpdatedAt { get; init; }
-    /// <summary>
-    /// The users that have this role.
-    /// </summary>
-    public ICollection<User> Users { get; set; } = new List<User>();
+
+    public ICollection<UserRoleInServer> UserRolesInServers { get; set; } = new List<UserRoleInServer>();
+    public Guid Id { get; init; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
 }

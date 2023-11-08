@@ -5,7 +5,10 @@ namespace ZConsole.Implementation;
 
 public class ConsoleService : IConsoleService
 {
-    public string ReadLine() => Console.ReadLine() ?? string.Empty;
+    public string ReadLine()
+    {
+        return Console.ReadLine() ?? string.Empty;
+    }
 
     public string ReadPassword(char mask = '*')
     {
@@ -13,10 +16,7 @@ public class ConsoleService : IConsoleService
         while (true)
         {
             var i = Console.ReadKey(true);
-            if (i.Key == ConsoleKey.Enter)
-            {
-                break;
-            }
+            if (i.Key == ConsoleKey.Enter) break;
 
             if (i.Key == ConsoleKey.Backspace)
             {
@@ -49,25 +49,42 @@ public class ConsoleService : IConsoleService
     }
 
     public void Log(string message, bool newLine = true)
-        => LogCustom(message, ConsoleColor.White, newLine);
+    {
+        LogCustom(message, ConsoleColor.White, newLine);
+    }
 
     public void BreakLine()
-        => Console.WriteLine();
+    {
+        Console.WriteLine();
+    }
 
     public void LogInfo(string message, bool newLine = true)
-        => LogCustom(message, ConsoleColor.Blue, newLine);
+    {
+        LogCustom(message, ConsoleColor.Blue, newLine);
+    }
 
     public void LogSuccess(string message, bool newLine = true)
-        => LogCustom(message, ConsoleColor.Green, newLine);
+    {
+        LogCustom(message, ConsoleColor.Green, newLine);
+    }
 
     public void LogWarning(string message, bool newLine = true)
-        => LogCustom(message, ConsoleColor.Yellow, newLine);
+    {
+        LogCustom(message, ConsoleColor.Yellow, newLine);
+    }
 
     public void LogError(string message, bool newLine = true)
-        => LogCustom(message, ConsoleColor.Red, newLine);
+    {
+        LogCustom(message, ConsoleColor.Red, newLine);
+    }
 
     public void LogCritical(string message, bool newLine = true)
-        => LogCustom(message, ConsoleColor.Magenta, newLine);
+    {
+        LogCustom(message, ConsoleColor.Magenta, newLine);
+    }
 
-    public void Clear() => Console.Clear();
+    public void Clear()
+    {
+        Console.Clear();
+    }
 }

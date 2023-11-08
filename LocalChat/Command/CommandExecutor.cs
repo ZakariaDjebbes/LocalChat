@@ -1,11 +1,10 @@
-﻿using System.Data;
-using System.Text;
+﻿using System.Text;
 using Core.Auth;
 using Core.Command;
 using Core.Context;
 using ZConsole.Service;
 
-namespace Business.Command;
+namespace LocalChat.Command;
 
 public class CommandExecutor : ICommandExecutor
 {

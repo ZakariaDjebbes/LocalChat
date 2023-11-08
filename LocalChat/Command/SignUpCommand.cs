@@ -1,27 +1,20 @@
 ﻿using Core.Auth;
 using Core.Command;
-using Core.Context;
 using Core.Service;
 using ZConsole.Service;
 
-namespace Business.Command;
+namespace LocalChat.Command;
 
 public class SignUpCommand : ICommand
 {
-    public string Name { get; init; }
-    public string Description { get; init; }
-    public string[] Aliases { get; init; }
-    public AuthenticationRequirement AuthenticationRequirement { get; }
+    private readonly IAuthenticationService _authenticationService;
+    private readonly IConsolePromptService _consolePromptService;
 
     private readonly IConsoleService _consoleService;
-    private readonly IConsolePromptService _consolePromptService;
-    private readonly IAuthenticationService _authenticationService;
-    private readonly IUserContext _userContext;
-    
+
     public SignUpCommand(IConsoleService consoleService,
         IConsolePromptService consolePromptService,
-        IAuthenticationService authenticationService,
-        IUserContext userContext)
+        IAuthenticationService authenticationService)
     {
         Name = "sign-up";
         Description = "Signs up a new user.";
@@ -30,8 +23,12 @@ public class SignUpCommand : ICommand
         _consoleService = consoleService;
         _consolePromptService = consolePromptService;
         _authenticationService = authenticationService;
-        _userContext = userContext;
     }
+
+    public string Name { get; }
+    public string Description { get; }
+    public string[] Aliases { get; }
+    public AuthenticationRequirement AuthenticationRequirement { get; }
 
     public void Execute(params object[] args)
     {
@@ -50,9 +47,9 @@ public class SignUpCommand : ICommand
         if (!signUpResult.Succeeded)
         {
             signUpResult.Errors.ToList().ForEach(e => _consoleService.LogError(e));
-            return;            
+            return;
         }
-        
+
         _consoleService.LogSuccess($"User {username} registered successfully.");
         _consoleService.LogInfo("You can now log in using the 'login' command.");
     }

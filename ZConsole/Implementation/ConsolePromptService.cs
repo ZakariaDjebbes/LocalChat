@@ -5,12 +5,12 @@ namespace ZConsole.Implementation;
 public class ConsolePromptService : IConsolePromptService
 {
     private readonly IConsoleService _consoleService;
-    
+
     public ConsolePromptService(IConsoleService consoleService)
     {
         _consoleService = consoleService;
     }
-    
+
     public string Prompt(string promptMessage)
     {
         _consoleService.Log(promptMessage, false);
@@ -53,14 +53,14 @@ public class ConsolePromptService : IConsolePromptService
     {
         _consoleService.Log(promptMessage, false);
         var input = _consoleService.ReadLine();
-        return (T) Convert.ChangeType(input, typeof(T));
+        return (T)Convert.ChangeType(input, typeof(T));
     }
 
     public T PromptOrDefault<T>(string promptMessage)
     {
         _consoleService.Log(promptMessage, false);
         var input = _consoleService.ReadLine();
-        return string.IsNullOrWhiteSpace(input) ? default : (T) Convert.ChangeType(input, typeof(T));
+        return string.IsNullOrWhiteSpace(input) ? default : (T)Convert.ChangeType(input, typeof(T));
     }
 
     public T Prompt<T>(string promptMessage, Func<string, T> converter)
@@ -98,10 +98,12 @@ public class ConsolePromptService : IConsolePromptService
 
             switch (keyInfo.Key)
             {
-                case ConsoleKey.UpArrow: case ConsoleKey.Z:
+                case ConsoleKey.UpArrow:
+                case ConsoleKey.Z:
                     selectedIndex = Math.Max(0, selectedIndex - 1);
                     break;
-                case ConsoleKey.DownArrow: case ConsoleKey.S:
+                case ConsoleKey.DownArrow:
+                case ConsoleKey.S:
                     selectedIndex = Math.Min(choicesArray.Length - 1, selectedIndex + 1);
                     break;
                 case ConsoleKey.Enter:
@@ -109,14 +111,15 @@ public class ConsolePromptService : IConsolePromptService
                     break;
             }
         } while (!selectionMade);
-        
-        if(!keepPrompt)
+
+        if (!keepPrompt)
             _consoleService.Clear();
-        
+
         return selectedIndex;
-        
     }
 
     public int Choose(string promptMessage, params string[] choices)
-        => Choose(promptMessage, choices.AsEnumerable());
+    {
+        return Choose(promptMessage, choices.AsEnumerable());
+    }
 }

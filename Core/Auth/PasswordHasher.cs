@@ -6,22 +6,22 @@ namespace Core.Auth;
 public static class PasswordHasher
 {
     /// <summary>
-    /// Computes the hash of a password.
+    ///     Computes the hash of a password.
     /// </summary>
     /// <param name="password">
-    /// The password to hash.
+    ///     The password to hash.
     /// </param>
     /// <param name="salt">
-    /// The salt to hash.
+    ///     The salt to hash.
     /// </param>
     /// <param name="pepper">
-    /// The pepper to hash.
+    ///     The pepper to hash.
     /// </param>
     /// <param name="iteration">
-    /// The number of iteration to hash.
+    ///     The number of iteration to hash.
     /// </param>
     /// <returns>
-    /// The hashed password.
+    ///     The hashed password.
     /// </returns>
     public static string ComputeHash(string password, string salt, string pepper, int iteration)
     {
@@ -38,12 +38,12 @@ public static class PasswordHasher
             iteration -= 1;
         }
     }
-    
+
     /// <summary>
-    /// Generates a salt.
+    ///     Generates a salt.
     /// </summary>
     /// <returns>
-    /// The generated salt.
+    ///     The generated salt.
     /// </returns>
     public static string GenerateSalt()
     {

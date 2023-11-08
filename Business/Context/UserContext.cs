@@ -1,27 +1,32 @@
 ﻿using Core.Context;
 using Core.Service;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Business.Context;
 
 public class UserContext : IUserContext
 {
+    private readonly ITokenService _tokenService;
+
+    public UserContext(IServiceProvider serviceProvider)
+    {
+        ContextId = Guid.NewGuid();
+        _tokenService = serviceProvider.GetRequiredService<ITokenService>();
+    }
+
     public Guid ContextId { get; init; }
     public UserContextResource ContextResource { get; set; }
 
-    private readonly ITokenService _tokenService;
-
-    public UserContext(ITokenService tokenService)
+    public bool IsAuthenticated()
     {
-        ContextId = Guid.NewGuid();
-        _tokenService = tokenService;
+        return ContextResource != null && !string.IsNullOrEmpty(ContextResource.Token) &&
+               _tokenService.ValidateToken(ContextResource.Token);
     }
 
-    public bool IsAuthenticated() =>
-        ContextResource != null && !string.IsNullOrEmpty(ContextResource.Token) &&
-        _tokenService.ValidateToken(ContextResource.Token);
-
     public void Clear()
-        => ContextResource = null;
+    {
+        ContextResource = null;
+    }
 
 
     public void Set(UserContextResource data)

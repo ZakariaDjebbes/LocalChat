@@ -9,17 +9,17 @@ namespace Business.Service;
 
 public class ServerService : IServerService
 {
-    public bool Initialized { get; private set; }
+    private readonly ILogger<ServerService> _logger;
+    private Server _server;
 
     private TcpListener _tcpListener;
-    private Server _server;
-    
-    private readonly ILogger<ServerService> _logger;
-    
-    public ServerService(ILogger<ServerService> logger )
+
+    public ServerService(ILogger<ServerService> logger)
     {
         _logger = logger;
     }
+
+    public bool Initialized { get; private set; }
 
     public bool Initialize(Server server)
     {
@@ -42,7 +42,7 @@ public class ServerService : IServerService
         }
 
         _server = server;
-        
+
         Initialized = true;
         _tcpListener = new TcpListener(IPAddress.Parse(_server.Address), _server.Port);
         _logger.LogInformation("Server initialized: {@Server}", _server);
@@ -62,7 +62,7 @@ public class ServerService : IServerService
             _tcpListener.Start();
             _server.IsRunning = true;
             _logger.LogInformation("Server is running on {ServerAddress}:{ServerPort}", _server.Address, _server.Port);
-            
+
             AcceptClients();
         }
         catch (Exception e)
@@ -94,7 +94,6 @@ public class ServerService : IServerService
     private void AcceptClients()
     {
         while (_server.IsRunning)
-        {
             try
             {
                 var client = _tcpListener.AcceptTcpClient();
@@ -106,18 +105,17 @@ public class ServerService : IServerService
                 _logger.LogError("Error accepting client: {ErrorMessage}", e.Message);
                 break;
             }
-        }
     }
 
     private void HandleClient(object clientObject)
     {
         var client = (TcpClient)clientObject;
         var stream = client.GetStream();
-        
+
         // Read message from client
         var message = new byte[4096];
         var bytesRead = stream.Read(message, 0, message.Length);
-        var messageString = Encoding.ASCII.GetString(message, 0, bytesRead);    
+        var messageString = Encoding.ASCII.GetString(message, 0, bytesRead);
         _logger.LogInformation("Message received from client: {Message}", messageString);
         // Close the client connection when done
         // client.Close();

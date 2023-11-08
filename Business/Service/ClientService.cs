@@ -7,12 +7,11 @@ namespace Business.Service;
 
 public class ClientService : IClientService
 {
+    private readonly ILogger<ClientService> _logger;
     private TcpClient _client;
     private NetworkStream _networkStream;
-    private StreamWriter _writer;
     private StreamReader _reader;
-
-    private readonly ILogger<ClientService> _logger;
+    private StreamWriter _writer;
 
     public ClientService(ILogger<ClientService> logger)
     {

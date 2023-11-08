@@ -7,10 +7,10 @@ namespace LocalChat.Controller;
 
 public class ConsoleInterfaceHost : IHostedService
 {
+    private readonly ICommandExecutor _commandExecutor;
     private readonly IConsolePromptService _consolePromptService;
     private readonly IConsoleService _consoleService;
-    private readonly ICommandExecutor _commandExecutor;
-    
+
     public ConsoleInterfaceHost(IServiceProvider serviceProvider)
     {
         _consolePromptService = serviceProvider.GetRequiredService<IConsolePromptService>();
@@ -22,26 +22,27 @@ public class ConsoleInterfaceHost : IHostedService
     {
         _consoleService.LogInfo("Welcome to LocalChat!");
         _consoleService.LogInfo("Type 'help' to see a list of commands.");
-        
+
         while (true)
-        {
             try
             {
                 var input = _consolePromptService.Prompt("[LocalChat#guest]>");
                 if (input == "help") _consoleService.Log(_commandExecutor.ToString());
-                else if(input == "exit") break;
+                else if (input == "exit") break;
                 else _commandExecutor.Execute(input);
             }
             catch (Exception e)
             {
                 _consoleService.LogError(e.Message);
             }
-        }
-        
+
         _consoleService.LogInfo("Terminating...");
         Environment.Exit(0);
         return Task.CompletedTask;
     }
 
-    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        return Task.CompletedTask;
+    }
 }

@@ -3,18 +3,14 @@ using Core.Command;
 using Core.Context;
 using ZConsole.Service;
 
-namespace Business.Command;
+namespace LocalChat.Command;
 
 public class SignOutCommand : ICommand
 {
-    public string Name { get; init; }
-    public string Description { get; init; }
-    public string[] Aliases { get; init; }
-    public AuthenticationRequirement AuthenticationRequirement { get; }
+    private readonly IConsoleService _consoleService;
 
     private readonly IUserContext _userContext;
-    private readonly IConsoleService _consoleService;
-    
+
     public SignOutCommand(IUserContext userContext, IConsoleService consoleService)
     {
         Name = "sign-out";
@@ -24,7 +20,12 @@ public class SignOutCommand : ICommand
         _userContext = userContext;
         _consoleService = consoleService;
     }
-    
+
+    public string Name { get; }
+    public string Description { get; }
+    public string[] Aliases { get; }
+    public AuthenticationRequirement AuthenticationRequirement { get; }
+
     public void Execute(params object[] args)
     {
         _userContext.Clear();

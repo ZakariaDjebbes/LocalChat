@@ -9,35 +9,34 @@ namespace Business.Service;
 
 public class TokenService : ITokenService
 {
-    private readonly string _secretKey;
-    private readonly string _issuer;
     private readonly string _audience;
+    private readonly string _issuer;
+    private readonly string _secretKey;
     private readonly int _validityPeriodInMinutes;
-    
-public TokenService(IConfiguration configuration)
+
+    public TokenService(IConfiguration configuration)
     {
         _secretKey = configuration["Jwt:SecretKey"] ?? throw new ArgumentNullException(nameof(configuration));
         _issuer = configuration["Jwt:Issuer"] ?? throw new ArgumentNullException(nameof(configuration));
         _audience = configuration["Jwt:Audience"] ?? throw new ArgumentNullException(nameof(configuration));
-        _validityPeriodInMinutes = Convert.ToInt32(configuration["Jwt:ValidityPeriodInMinutes"] ?? throw new ArgumentNullException(nameof(configuration)));
+        _validityPeriodInMinutes = Convert.ToInt32(configuration["Jwt:ValidityPeriodInMinutes"] ??
+                                                   throw new ArgumentNullException(nameof(configuration)));
     }
-    
-    public string GenerateToken(string username, IEnumerable<string> roles)
+
+    public string GenerateToken(string username)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>
         {
-            new(ClaimTypes.Name, username),
+            new(ClaimTypes.Name, username)
         };
 
-        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
-
         var token = new JwtSecurityToken(
-            issuer: _issuer,
-            audience: _audience,
-            claims: claims,
+            _issuer,
+            _audience,
+            claims,
             expires: DateTime.UtcNow.AddMinutes(_validityPeriodInMinutes),
             signingCredentials: credentials
         );

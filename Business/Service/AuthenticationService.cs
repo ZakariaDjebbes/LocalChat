@@ -8,10 +8,10 @@ namespace Business.Service;
 
 public class AuthenticationService : IAuthenticationService
 {
-    private readonly IRepository<User> _userRepository;
-    private readonly ITokenService _tokenService;
-    private readonly string _pepper;
     private readonly int _iteration;
+    private readonly string _pepper;
+    private readonly ITokenService _tokenService;
+    private readonly IRepository<User> _userRepository;
 
     public AuthenticationService(IRepository<User> userRepository,
         IConfiguration configuration,
@@ -54,10 +54,7 @@ public class AuthenticationService : IAuthenticationService
         if (user.PasswordHash != passwordHash)
             return new SignInResult(false, null, null, new[] { "Username or password did not match." });
 
-        var roles = user.Roles
-            .Select(x => x.Name)
-            .AsEnumerable();
-        var token = _tokenService.GenerateToken(user.Username, roles); // expires in 1 hour
+        var token = _tokenService.GenerateToken(user.Username); // expires in 1 hour
         var tokenValid = _tokenService.ValidateToken(token);
 
         return tokenValid

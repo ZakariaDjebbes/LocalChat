@@ -4,18 +4,14 @@ using Core.Context;
 using Core.Service;
 using ZConsole.Service;
 
-namespace Business.Command;
+namespace LocalChat.Command;
 
 public class SignInCommand : ICommand
 {
-    public string Name { get; init; }
-    public string Description { get; init; }
-    public string[] Aliases { get; init; }
-    public AuthenticationRequirement AuthenticationRequirement { get; init; }
+    private readonly IAuthenticationService _authenticationService;
+    private readonly IConsolePromptService _consolePromptService;
 
     private readonly IConsoleService _consoleService;
-    private readonly IConsolePromptService _consolePromptService;
-    private readonly IAuthenticationService _authenticationService;
     private readonly IUserContext _userContext;
 
     public SignInCommand(IConsoleService consoleService,
@@ -27,12 +23,17 @@ public class SignInCommand : ICommand
         Description = "Signs in a user.";
         Aliases = new[] { "login" };
         AuthenticationRequirement = AuthenticationRequirement.Unauthenticated;
-        
+
         _consoleService = consoleService;
         _consolePromptService = consolePromptService;
         _authenticationService = authenticationService;
         _userContext = userContext;
     }
+
+    public string Name { get; }
+    public string Description { get; }
+    public string[] Aliases { get; }
+    public AuthenticationRequirement AuthenticationRequirement { get; }
 
     public void Execute(params object[] args)
     {

@@ -3,18 +3,14 @@ using Core.Command;
 using Core.Context;
 using ZConsole.Service;
 
-namespace Business.Command;
+namespace LocalChat.Command;
 
 public class WhoAmICommand : ICommand
 {
-    public string Name { get; init; }
-    public string Description { get; init; }
-    public string[] Aliases { get; init; }
-    public AuthenticationRequirement AuthenticationRequirement { get; }
+    private readonly IConsoleService _consoleService;
 
     private readonly IUserContext _userContext;
-    private readonly IConsoleService _consoleService;
-    
+
     public WhoAmICommand(IUserContext userContext, IConsoleService consoleService)
     {
         Name = "whoami";
@@ -24,9 +20,16 @@ public class WhoAmICommand : ICommand
         _userContext = userContext;
         _consoleService = consoleService;
     }
-    
+
+    public string Name { get; }
+    public string Description { get; }
+    public string[] Aliases { get; }
+    public AuthenticationRequirement AuthenticationRequirement { get; }
+
     public void Execute(params object[] args)
     {
-        _consoleService.LogSuccess($"You are currently logged in as {_userContext.ContextResource.User.Username}.");
+        var user = _userContext.ContextResource.User;
+        var message = $"You are currently logged in as {user.Username}.";
+        _consoleService.LogSuccess(message);
     }
 }
