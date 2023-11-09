@@ -44,6 +44,17 @@ public class Repository<T> : IRepository<T> where T : class, IEntity
                     => current.Include(includeProperty));
         return query.ToList();
     }
+    
+    public IEnumerable<T> GetAllWithInclude(params string[] includeProperties)
+    {
+        var query = _dbContext.Set<T>().AsNoTracking();
+        query = includeProperties
+            .Where(includeProperty => !string.IsNullOrEmpty(includeProperty))
+            .Aggregate(query,
+                (current, includeProperty)
+                    => current.Include(includeProperty));
+        return query.ToList();
+    }
 
     public void Update(T entity)
     {

@@ -43,10 +43,12 @@ internal class Program
     private static IHostBuilder CreateHostBuilder(string[] args)
     {
         return Host.CreateDefaultBuilder(args)
-            .ConfigureAppConfiguration((_, config)
+            .ConfigureAppConfiguration((context, config)
                 =>
             {
-                config.AddJsonFile("appsettings.json");
+                var environmentName = context.HostingEnvironment.EnvironmentName.ToLower();
+                config.AddJsonFile($"appsettings.json", optional: false, reloadOnChange: true)
+                    .AddJsonFile($"appsettings.{environmentName}.json", optional: true, reloadOnChange: true);
             })
             .ConfigureServices((hostContext, services) =>
             {

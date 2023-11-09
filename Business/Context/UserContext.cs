@@ -27,5 +27,5 @@ public class UserContext : IUserContext
 
 
     public void Set(UserContextResource data) 
-        => ContextResource = data;
+        => ContextResource = data ?? throw new ArgumentNullException(nameof(data));
 }

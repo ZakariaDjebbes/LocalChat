@@ -31,6 +31,17 @@ public interface IRepository<T> where T : IEntity
     public IEnumerable<T> GetAllWithInclude(params Expression<Func<T, object>>[] includeProperties);
 
     /// <summary>
+    ///    Gets all entities of type <typeparamref name="T" /> with the given include properties
+    /// </summary>
+    /// <param name="includeProperties">
+    ///    The properties to include in the query
+    /// </param>
+    /// <returns>
+    ///   A collection of all entities of type <typeparamref name="T" /> with the given include properties
+    /// </returns>
+    public IEnumerable<T> GetAllWithInclude(params string[] includeProperties);
+    
+    /// <summary>
     ///     Gets an entity of type <typeparamref name="T" /> by its ID
     /// </summary>
     /// <param name="id">The ID of the entity to get</param>

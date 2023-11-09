@@ -66,12 +66,14 @@ public class ConfigurationBuilder
 
         // Command services
         services.AddScoped<ICommandExecutor, CommandExecutor>();
+        services.AddScoped<ICommand, ClearCommand>();
         services.AddScoped<ICommand, SignInCommand>();
         services.AddScoped<ICommand, SignUpCommand>();
         services.AddScoped<ICommand, WhoAmICommand>();
         services.AddScoped<ICommand, SignOutCommand>();
         services.AddScoped<ICommand, CreateServerCommand>();
         services.AddScoped<ICommand, GetServersCommand>();
+        services.AddScoped<ICommand, StartServerCommand>();
 
         // Repository services
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
