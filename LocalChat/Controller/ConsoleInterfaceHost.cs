@@ -22,9 +22,15 @@ public class ConsoleInterfaceHost : IHostedService
     {
         _loggerService.LogInfo("Welcome to LocalChat!");
         _loggerService.LogInfo("Type 'help' to see a list of commands.");
-
-        var res = _promptService.Choose("Choose your best dev", "Amine", "Safa", "Zakaria");
-        _loggerService.LogInfo("You have chosen " + res + "!");
+        
+        var choices = _promptService.ChooseValues(
+            "What would you like to do?",
+            "Start a new chat",
+            "Join an existing chat",
+            "Exit"
+        );
+    
+        choices.ToList().ForEach(_loggerService.LogInfo);
         
         while (true)
             try

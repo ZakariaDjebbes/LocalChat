@@ -11,51 +11,17 @@ public class PromptService : IPromptService
         _consoleService = consoleService;
     }
 
+    public bool KeepPrompt { get; set; }
     public ConsoleColor PromptColor { get; set; } = ConsoleColor.White;
-    public ConsoleColor PromptBackgroundColor { get; set; } = ConsoleColor.Black;
-
-    public string Prompt(string promptMessage)
-    {
-        _consoleService.WriteCustom(promptMessage, PromptColor, false);
-        return _consoleService.ReadLine();
-    }
-
-    public string PromptLine(string promptMessage)
-    {
-        _consoleService.WriteCustom(promptMessage, PromptColor);
-        return _consoleService.ReadLine();
-    }
-
-    public string Password(string promptMessage)
-    {
-        _consoleService.WriteCustom(promptMessage, PromptColor, false);
-        return _consoleService.ReadPassword();
-    }
-
-    public string PasswordLine(string promptMessage)
-    {
-        _consoleService.WriteCustom(promptMessage, PromptColor);
-        return _consoleService.ReadPassword();
-    }
-
-    public string PromptOrDefault(string promptMessage)
-    {
-        _consoleService.WriteCustom(promptMessage, PromptColor, false);
-        var input = _consoleService.ReadLine();
-        return string.IsNullOrWhiteSpace(input) ? "" : input;
-    }
-
-    public string PromptPasswordOrDefault(string promptMessage)
-    {
-        _consoleService.WriteCustom(promptMessage, PromptColor, false);
-        var input = _consoleService.ReadPassword();
-        return string.IsNullOrWhiteSpace(input) ? "" : input;
-    }
 
     public T Prompt<T>(string promptMessage)
     {
         _consoleService.WriteCustom(promptMessage, PromptColor, false);
         var input = _consoleService.ReadLine();
+
+        if (!KeepPrompt)
+            _consoleService.Clear();
+
         return (T)Convert.ChangeType(input, typeof(T));
     }
 
@@ -63,13 +29,32 @@ public class PromptService : IPromptService
     {
         _consoleService.WriteCustom(promptMessage, PromptColor, false);
         var input = _consoleService.ReadLine();
-        return string.IsNullOrWhiteSpace(input) ? default : (T)Convert.ChangeType(input, typeof(T));
+
+        if (!KeepPrompt)
+            _consoleService.Clear();
+
+        T result;
+
+        try
+        {
+            result = string.IsNullOrWhiteSpace(input) ? default : (T)Convert.ChangeType(input, typeof(T));
+        }
+        catch
+        {
+            result = default;
+        }
+
+        return result;
     }
 
     public T Prompt<T>(string promptMessage, Func<string, T> converter)
     {
         _consoleService.WriteCustom(promptMessage, PromptColor, false);
         var input = _consoleService.ReadLine();
+
+        if (!KeepPrompt)
+            _consoleService.Clear();
+
         return converter(input);
     }
 
@@ -77,10 +62,63 @@ public class PromptService : IPromptService
     {
         _consoleService.WriteCustom(promptMessage, PromptColor, false);
         var input = _consoleService.ReadLine();
-        return string.IsNullOrWhiteSpace(input) ? default : converter(input);
+
+        if (!KeepPrompt)
+            _consoleService.Clear();
+
+        T result;
+
+        try
+        {
+            result = string.IsNullOrWhiteSpace(input) ? default : converter(input);
+        }
+        catch
+        {
+            result = default;
+        }
+
+        return result;
     }
 
-    public int Choose(string promptMessage, IEnumerable<string> choices, bool keepPrompt = false)
+    public string Prompt(string promptMessage)
+        => Prompt<string>(promptMessage);
+
+    public string Password(string promptMessage)
+    {
+        _consoleService.WriteCustom(promptMessage, PromptColor, false);
+
+        if (!KeepPrompt)
+            _consoleService.Clear();
+
+        return _consoleService.ReadPassword();
+    }
+
+    public string PromptOrDefault(string promptMessage)
+        => PromptOrDefault<string>(promptMessage);
+
+    public string PromptPasswordOrDefault(string promptMessage)
+    {
+        _consoleService.WriteCustom(promptMessage, PromptColor, false);
+        var input = _consoleService.ReadPassword();
+
+        string result;
+
+        try
+        {
+            result = string.IsNullOrWhiteSpace(input) ? default : input;
+        }
+        catch
+        {
+            result = default;
+        }
+
+        if (!KeepPrompt)
+            _consoleService.Clear();
+
+        return result;
+    }
+
+    public int Choose(string promptMessage, IEnumerable<string> choices)
     {
         var selectedIndex = 0;
         var selectionMade = false;
@@ -93,7 +131,7 @@ public class PromptService : IPromptService
 
             for (var i = 0; i < choicesArray.Length; i++)
             {
-                _consoleService.WriteCustom(i == selectedIndex ? "> " : "  ", 
+                _consoleService.WriteCustom(i == selectedIndex ? "> " : "  ",
                     ConsoleColor.Green,
                     false);
                 _consoleService.WriteCustom(choicesArray.ElementAt(i), PromptColor);
@@ -123,18 +161,87 @@ public class PromptService : IPromptService
             }
         } while (!selectionMade);
 
-        if (!keepPrompt)
+        if (!KeepPrompt)
             _consoleService.Clear();
 
         return selectedIndex;
     }
 
-    public int Choose(string promptMessage, params string[] choices) 
+    public int Choose(string promptMessage, params string[] choices)
         => Choose(promptMessage, choices.AsEnumerable());
 
-    public string ChooseValue(string promptMessage, IEnumerable<string> choices, bool keepPrompt = false)
+    public string ChooseValue(string promptMessage, IEnumerable<string> choices)
     {
         var choicesList = choices.ToList();
-        return choicesList.ElementAt(Choose(promptMessage, choicesList, keepPrompt));
+        return choicesList.ElementAt(Choose(promptMessage, choicesList));
     }
+
+    public IEnumerable<int> ChooseMultiple(string promptMessage, IEnumerable<string> choices)
+    {
+        var selectedIndex = 0;
+        var selectionMade = false;
+        var choicesArray = choices.ToArray();
+        var selectedIndices = new List<int>();
+
+        do
+        {
+            _consoleService.Clear();
+            _consoleService.WriteCustom(promptMessage, PromptColor);
+
+            for (var i = 0; i < choicesArray.Length; i++)
+            {
+                _consoleService.WriteCustom(i == selectedIndex ? "> " : "  ",
+                    ConsoleColor.Green,
+                    false);
+                _consoleService.WriteCustom(selectedIndices.Contains(i) ? "[X] " : "[ ] ",
+                    ConsoleColor.Green,
+                    false);
+                _consoleService.WriteCustom(choicesArray.ElementAt(i), PromptColor);
+            }
+
+            var keyInfo = Console.ReadKey();
+
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.UpArrow:
+                case ConsoleKey.Z:
+                    selectedIndex = Math.Max(0, selectedIndex - 1);
+                    break;
+                case ConsoleKey.DownArrow:
+                case ConsoleKey.S:
+                    selectedIndex = Math.Min(choicesArray.Length - 1, selectedIndex + 1);
+                    break;
+                case ConsoleKey.Enter:
+                    if (selectedIndices.Contains(selectedIndex))
+                        selectedIndices.Remove(selectedIndex);
+                    else
+                        selectedIndices.Add(selectedIndex);
+                    break;
+                case ConsoleKey.E:
+                    selectedIndex = -1;
+                    selectionMade = true;
+                    break;
+                default:
+                    continue;
+            }
+        } while (!selectionMade);
+
+        if (!KeepPrompt)
+            _consoleService.Clear();
+
+        return selectedIndices;
+    }
+
+    public IEnumerable<int> ChooseMultiple(string promptMessage, params string[] choices)
+        => ChooseMultiple(promptMessage, choices.AsEnumerable());
+
+    public IEnumerable<string> ChooseValues(string promptMessage, IEnumerable<string> choices)
+    {
+        var choicesList = choices.ToList();
+        var selectedIndices = ChooseMultiple(promptMessage, choicesList);
+        return selectedIndices.Select(choicesList.ElementAt);
+    }
+
+    public IEnumerable<string> ChooseValues(string promptMessage, params string[] choices)
+        => ChooseValues(promptMessage, choices.AsEnumerable());
 }
