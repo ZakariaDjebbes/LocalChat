@@ -9,8 +9,8 @@ namespace LocalChat.Command;
 
 public class CreateServerCommand : ICommand
 {
-    private readonly IConsolePromptService _consolePromptService;
-    private readonly IConsoleService _consoleService;
+    private readonly IPromptService _promptService;
+    private readonly ILoggerService _loggerService;
     private readonly IRepository<Role> _roleRepository;
 
     private readonly IRepository<Server> _serverRepository;
@@ -18,8 +18,8 @@ public class CreateServerCommand : ICommand
 
     public CreateServerCommand(IRepository<Server> serverRepository,
         IRepository<Role> roleRepository,
-        IConsoleService consoleService,
-        IConsolePromptService consolePromptService,
+        ILoggerService loggerService,
+        IPromptService promptService,
         IUserContext userContext)
     {
         Name = "create-server";
@@ -29,8 +29,8 @@ public class CreateServerCommand : ICommand
 
         _serverRepository = serverRepository;
         _roleRepository = roleRepository;
-        _consoleService = consoleService;
-        _consolePromptService = consolePromptService;
+        _loggerService = loggerService;
+        _promptService = promptService;
         _userContext = userContext;
     }
 
@@ -41,13 +41,13 @@ public class CreateServerCommand : ICommand
 
     public void Execute(params object[] args)
     {
-        var serverName = _consolePromptService.Prompt("Server name: ");
-        var serverAddress = _consolePromptService.Prompt("Server host: ");
-        var serverPort = _consolePromptService.Prompt<int>("Server port: ");
+        var serverName = _promptService.Prompt("Server name: ");
+        var serverAddress = _promptService.Prompt("Server host: ");
+        var serverPort = _promptService.Prompt<int>("Server port: ");
 
         var server = CreateServer(serverName, serverAddress, serverPort);
 
-        _consoleService.LogSuccess($"Server {server.Name} created successfully!");
+        _loggerService.LogSuccess($"Server {server.Name} created successfully!");
     }
 
     private Server CreateServer(string serverName, string serverAddress, int serverPort)

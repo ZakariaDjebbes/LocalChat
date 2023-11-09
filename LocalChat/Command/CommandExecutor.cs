@@ -9,14 +9,14 @@ namespace LocalChat.Command;
 public class CommandExecutor : ICommandExecutor
 {
     private readonly IEnumerable<ICommand> _commands;
-    private readonly IConsoleService _consoleService;
+    private readonly ILoggerService _loggerService;
     private readonly IUserContext _userContext;
 
     public CommandExecutor(IEnumerable<ICommand> commands,
-        IConsoleService consoleService,
+        ILoggerService loggerService,
         IUserContext userContext)
     {
-        _consoleService = consoleService;
+        _loggerService = loggerService;
         _commands = commands;
         _userContext = userContext;
     }
@@ -24,20 +24,22 @@ public class CommandExecutor : ICommandExecutor
     public void Execute(string commandName, params object[] args)
     {
         var command = _commands.FirstOrDefault(c => c.Name == commandName || c.Aliases.Contains(commandName));
-
+        
         if (command == null)
         {
-            _consoleService.LogError($"Command '{commandName}' not found.");
+            _loggerService.LogError($"Command '{commandName}' not found.");
             return;
         }
 
         switch (command.AuthenticationRequirement)
         {
-            case AuthenticationRequirement.Authenticated when !_userContext.IsAuthenticated():
-                _consoleService.LogError("You must be authenticated to execute this command.");
+            case AuthenticationRequirement.Authenticated 
+                when !_userContext.IsAuthenticated():
+                _loggerService.LogError("You must be authenticated to execute this command.");
                 return;
-            case AuthenticationRequirement.Unauthenticated when _userContext.IsAuthenticated():
-                _consoleService.LogError("You are already authenticated.");
+            case AuthenticationRequirement.Unauthenticated 
+                when _userContext.IsAuthenticated():
+                _loggerService.LogError("You are already authenticated.");
                 return;
             case AuthenticationRequirement.None:
             default:

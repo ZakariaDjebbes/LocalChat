@@ -2,77 +2,80 @@
 
 namespace ZConsole.Implementation;
 
-public class ConsolePromptService : IConsolePromptService
+public class PromptService : IPromptService
 {
     private readonly IConsoleService _consoleService;
 
-    public ConsolePromptService(IConsoleService consoleService)
+    public PromptService(IConsoleService consoleService)
     {
         _consoleService = consoleService;
     }
 
+    public ConsoleColor PromptColor { get; set; } = ConsoleColor.White;
+    public ConsoleColor PromptBackgroundColor { get; set; } = ConsoleColor.Black;
+
     public string Prompt(string promptMessage)
     {
-        _consoleService.Log(promptMessage, false);
+        _consoleService.WriteCustom(promptMessage, PromptColor, false);
         return _consoleService.ReadLine();
     }
 
     public string PromptLine(string promptMessage)
     {
-        _consoleService.Log(promptMessage);
+        _consoleService.WriteCustom(promptMessage, PromptColor);
         return _consoleService.ReadLine();
     }
 
     public string Password(string promptMessage)
     {
-        _consoleService.Log(promptMessage, false);
+        _consoleService.WriteCustom(promptMessage, PromptColor, false);
         return _consoleService.ReadPassword();
     }
 
     public string PasswordLine(string promptMessage)
     {
-        _consoleService.Log(promptMessage);
+        _consoleService.WriteCustom(promptMessage, PromptColor);
         return _consoleService.ReadPassword();
     }
 
     public string PromptOrDefault(string promptMessage)
     {
-        _consoleService.Log(promptMessage, false);
+        _consoleService.WriteCustom(promptMessage, PromptColor, false);
         var input = _consoleService.ReadLine();
         return string.IsNullOrWhiteSpace(input) ? "" : input;
     }
 
     public string PromptPasswordOrDefault(string promptMessage)
     {
-        _consoleService.Log(promptMessage, false);
+        _consoleService.WriteCustom(promptMessage, PromptColor, false);
         var input = _consoleService.ReadPassword();
         return string.IsNullOrWhiteSpace(input) ? "" : input;
     }
 
     public T Prompt<T>(string promptMessage)
     {
-        _consoleService.Log(promptMessage, false);
+        _consoleService.WriteCustom(promptMessage, PromptColor, false);
         var input = _consoleService.ReadLine();
         return (T)Convert.ChangeType(input, typeof(T));
     }
 
     public T PromptOrDefault<T>(string promptMessage)
     {
-        _consoleService.Log(promptMessage, false);
+        _consoleService.WriteCustom(promptMessage, PromptColor, false);
         var input = _consoleService.ReadLine();
         return string.IsNullOrWhiteSpace(input) ? default : (T)Convert.ChangeType(input, typeof(T));
     }
 
     public T Prompt<T>(string promptMessage, Func<string, T> converter)
     {
-        _consoleService.Log(promptMessage, false);
+        _consoleService.WriteCustom(promptMessage, PromptColor, false);
         var input = _consoleService.ReadLine();
         return converter(input);
     }
 
     public T PromptOrDefault<T>(string promptMessage, Func<string, T> converter)
     {
-        _consoleService.Log(promptMessage, false);
+        _consoleService.WriteCustom(promptMessage, PromptColor, false);
         var input = _consoleService.ReadLine();
         return string.IsNullOrWhiteSpace(input) ? default : converter(input);
     }
@@ -86,12 +89,14 @@ public class ConsolePromptService : IConsolePromptService
         do
         {
             _consoleService.Clear();
-            _consoleService.Log(promptMessage);
+            _consoleService.WriteCustom(promptMessage, PromptColor);
 
             for (var i = 0; i < choicesArray.Length; i++)
             {
-                _consoleService.LogSuccess(i == selectedIndex ? "> " : "  ", false);
-                _consoleService.Log(choicesArray.ElementAt(i));
+                _consoleService.WriteCustom(i == selectedIndex ? "> " : "  ", 
+                    ConsoleColor.Green,
+                    false);
+                _consoleService.WriteCustom(choicesArray.ElementAt(i), PromptColor);
             }
 
             var keyInfo = Console.ReadKey();
@@ -109,6 +114,12 @@ public class ConsolePromptService : IConsolePromptService
                 case ConsoleKey.Enter:
                     selectionMade = true;
                     break;
+                case ConsoleKey.Escape:
+                    selectedIndex = -1;
+                    selectionMade = true;
+                    break;
+                default:
+                    continue;
             }
         } while (!selectionMade);
 
@@ -118,8 +129,12 @@ public class ConsolePromptService : IConsolePromptService
         return selectedIndex;
     }
 
-    public int Choose(string promptMessage, params string[] choices)
+    public int Choose(string promptMessage, params string[] choices) 
+        => Choose(promptMessage, choices.AsEnumerable());
+
+    public string ChooseValue(string promptMessage, IEnumerable<string> choices, bool keepPrompt = false)
     {
-        return Choose(promptMessage, choices.AsEnumerable());
+        var choicesList = choices.ToList();
+        return choicesList.ElementAt(Choose(promptMessage, choicesList, keepPrompt));
     }
 }

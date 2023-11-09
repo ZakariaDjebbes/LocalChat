@@ -7,18 +7,18 @@ namespace LocalChat.Command;
 
 public class SignOutCommand : ICommand
 {
-    private readonly IConsoleService _consoleService;
-
+    private readonly ILoggerService _loggerService;
     private readonly IUserContext _userContext;
 
-    public SignOutCommand(IUserContext userContext, IConsoleService consoleService)
+    public SignOutCommand(IUserContext userContext, 
+        ILoggerService loggerService)
     {
         Name = "sign-out";
         Description = "Signs out the current user.";
         Aliases = new[] { "logout" };
         AuthenticationRequirement = AuthenticationRequirement.Authenticated;
         _userContext = userContext;
-        _consoleService = consoleService;
+        _loggerService = loggerService;
     }
 
     public string Name { get; }
@@ -29,6 +29,6 @@ public class SignOutCommand : ICommand
     public void Execute(params object[] args)
     {
         _userContext.Clear();
-        _consoleService.LogSuccess("You have been signed out.");
+        _loggerService.LogSuccess("You have been signed out.");
     }
 }

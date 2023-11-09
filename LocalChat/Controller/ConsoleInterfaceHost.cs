@@ -8,35 +8,38 @@ namespace LocalChat.Controller;
 public class ConsoleInterfaceHost : IHostedService
 {
     private readonly ICommandExecutor _commandExecutor;
-    private readonly IConsolePromptService _consolePromptService;
-    private readonly IConsoleService _consoleService;
+    private readonly IPromptService _promptService;
+    private readonly ILoggerService _loggerService;
 
     public ConsoleInterfaceHost(IServiceProvider serviceProvider)
     {
-        _consolePromptService = serviceProvider.GetRequiredService<IConsolePromptService>();
-        _consoleService = serviceProvider.GetRequiredService<IConsoleService>();
+        _promptService = serviceProvider.GetRequiredService<IPromptService>();
+        _loggerService = serviceProvider.GetRequiredService<ILoggerService>();
         _commandExecutor = serviceProvider.GetRequiredService<ICommandExecutor>();
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _consoleService.LogInfo("Welcome to LocalChat!");
-        _consoleService.LogInfo("Type 'help' to see a list of commands.");
+        _loggerService.LogInfo("Welcome to LocalChat!");
+        _loggerService.LogInfo("Type 'help' to see a list of commands.");
 
+        var res = _promptService.Choose("Choose your best dev", "Amine", "Safa", "Zakaria");
+        _loggerService.LogInfo("You have chosen " + res + "!");
+        
         while (true)
             try
             {
-                var input = _consolePromptService.Prompt("[LocalChat#guest]>");
-                if (input == "help") _consoleService.Log(_commandExecutor.ToString());
+                var input = _promptService.Prompt("[LocalChat#guest]>");
+                if (input == "help") _loggerService.Log(_commandExecutor.ToString());
                 else if (input == "exit") break;
                 else _commandExecutor.Execute(input);
             }
             catch (Exception e)
             {
-                _consoleService.LogError(e.Message);
+                _loggerService.LogError(e.Message);
             }
 
-        _consoleService.LogInfo("Terminating...");
+        _loggerService.LogInfo("Terminating...");
         Environment.Exit(0);
         return Task.CompletedTask;
     }

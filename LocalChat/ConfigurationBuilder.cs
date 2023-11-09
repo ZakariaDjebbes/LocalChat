@@ -45,6 +45,7 @@ public class ConfigurationBuilder
         {
             ctx.UseSqlite(_config.GetConnectionString("LocalChatDbConnection"));
         });
+        
         // Context
         services.AddSingleton<IUserContext, UserContext>();
 
@@ -53,7 +54,8 @@ public class ConfigurationBuilder
 
         // Console services
         services.AddScoped<IConsoleService, ConsoleService>();
-        services.AddScoped<IConsolePromptService, ConsolePromptService>();
+        services.AddScoped<IPromptService, PromptService>();
+        services.AddScoped<ILoggerService, LoggerService>();
 
         // Server services 
         services.AddScoped<IServerService, ServerService>();

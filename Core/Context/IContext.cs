@@ -6,8 +6,11 @@
 /// <typeparam name="T">
 ///     The type of data that is held by the context.
 /// </typeparam>
-public interface IContext<T>
+public interface IContext<T> where T : IDisposable
 {
+    /// <summary>
+    ///    The unique identifier of the context.
+    /// </summary>
     public Guid ContextId { get; init; }
 
     /// <summary>

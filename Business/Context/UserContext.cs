@@ -17,20 +17,15 @@ public class UserContext : IUserContext
     public Guid ContextId { get; init; }
     public UserContextResource ContextResource { get; set; }
 
-    public bool IsAuthenticated()
-    {
-        return ContextResource != null && !string.IsNullOrEmpty(ContextResource.Token) &&
-               _tokenService.ValidateToken(ContextResource.Token);
-    }
+    public bool IsAuthenticated() 
+        => ContextResource != null && 
+           !string.IsNullOrEmpty(ContextResource.Token) &&
+           _tokenService.ValidateToken(ContextResource.Token);
 
-    public void Clear()
-    {
-        ContextResource = null;
-    }
+    public void Clear() 
+        => ContextResource.Dispose();
 
 
-    public void Set(UserContextResource data)
-    {
-        ContextResource = data;
-    }
+    public void Set(UserContextResource data) 
+        => ContextResource = data;
 }

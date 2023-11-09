@@ -3,8 +3,18 @@
 /// <summary>
 ///     A service that provides console prompting functionality.
 /// </summary>
-public interface IConsolePromptService
+public interface IPromptService
 {
+    /// <summary>
+    ///    The color of the prompt message.
+    /// </summary>
+    public ConsoleColor PromptColor { get; set; }
+    
+    /// <summary>
+    ///   The background color of the prompt message.
+    /// </summary>
+    public ConsoleColor PromptBackgroundColor { get; set; }
+    
     /// <summary>
     ///     Prompts the user for input.
     /// </summary>
@@ -124,4 +134,21 @@ public interface IConsolePromptService
     /// <returns>The index of the selected choice.</returns>
     /// <exception cref="IndexOutOfRangeException">Thrown if the user selects an out-of-range index.</exception>
     int Choose(string promptMessage, params string[] choices);
+    
+    /// <summary>
+    ///    Presents the user with a choice of options and allows them to select one.
+    /// </summary>
+    /// <param name="promptMessage">
+    ///    The message to display to the user.
+    /// </param>
+    /// <param name="choices">
+    ///   A collection of strings representing the available choices.
+    /// </param>
+    /// <param name="keepPrompt">
+    ///     Whether to keep the prompt message on the screen after the user has made a selection.
+    /// </param>
+    /// <returns>
+    ///     The string value of the selected choice.
+    /// </returns>
+    string ChooseValue(string promptMessage, IEnumerable<string> choices, bool keepPrompt = false);
 }

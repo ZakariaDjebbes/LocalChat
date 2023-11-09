@@ -9,13 +9,12 @@ namespace LocalChat.Command;
 public class SignInCommand : ICommand
 {
     private readonly IAuthenticationService _authenticationService;
-    private readonly IConsolePromptService _consolePromptService;
-
-    private readonly IConsoleService _consoleService;
+    private readonly IPromptService _promptService;
+    private readonly ILoggerService _loggerService;
     private readonly IUserContext _userContext;
 
-    public SignInCommand(IConsoleService consoleService,
-        IConsolePromptService consolePromptService,
+    public SignInCommand(ILoggerService loggerService,
+        IPromptService promptService,
         IAuthenticationService authenticationService,
         IUserContext userContext)
     {
@@ -24,8 +23,8 @@ public class SignInCommand : ICommand
         Aliases = new[] { "login" };
         AuthenticationRequirement = AuthenticationRequirement.Unauthenticated;
 
-        _consoleService = consoleService;
-        _consolePromptService = consolePromptService;
+        _loggerService = loggerService;
+        _promptService = promptService;
         _authenticationService = authenticationService;
         _userContext = userContext;
     }
@@ -37,18 +36,18 @@ public class SignInCommand : ICommand
 
     public void Execute(params object[] args)
     {
-        var username = _consolePromptService.Prompt("Username: ");
-        var password = _consolePromptService.Password("Password: ");
+        var username = _promptService.Prompt("Username: ");
+        var password = _promptService.Password("Password: ");
 
         var signInResult = _authenticationService.SignIn(username, password);
 
         if (!signInResult.Succeeded)
         {
-            signInResult.Errors.ToList().ForEach(e => _consoleService.LogError(e));
+            signInResult.Errors.ToList().ForEach(e => _loggerService.LogError(e));
             return;
         }
 
         _userContext.Set(new UserContextResource(signInResult.User, signInResult.Token));
-        _consoleService.LogSuccess($"User {username} signed in successfully.");
+        _loggerService.LogSuccess($"User {username} signed in successfully.");
     }
 }

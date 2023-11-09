@@ -7,18 +7,19 @@ namespace LocalChat.Command;
 
 public class WhoAmICommand : ICommand
 {
-    private readonly IConsoleService _consoleService;
+    private readonly ILoggerService _loggerService;
 
     private readonly IUserContext _userContext;
 
-    public WhoAmICommand(IUserContext userContext, IConsoleService consoleService)
+    public WhoAmICommand(IUserContext userContext,
+        ILoggerService loggerService)
     {
         Name = "whoami";
         Description = "Displays the current user.";
         Aliases = new[] { "me" };
         AuthenticationRequirement = AuthenticationRequirement.Authenticated;
         _userContext = userContext;
-        _consoleService = consoleService;
+        _loggerService = loggerService;
     }
 
     public string Name { get; }
@@ -30,6 +31,6 @@ public class WhoAmICommand : ICommand
     {
         var user = _userContext.ContextResource.User;
         var message = $"You are currently logged in as {user.Username}.";
-        _consoleService.LogSuccess(message);
+        _loggerService.LogSuccess(message);
     }
 }
