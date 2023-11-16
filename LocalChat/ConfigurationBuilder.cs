@@ -48,7 +48,8 @@ public class ConfigurationBuilder
         
         // Context
         services.AddSingleton<IUserContext, UserContext>();
-
+        services.AddSingleton<IServerContext, ServerContext>();
+        
         // Runners
         services.AddHostedService<ConsoleInterfaceHost>();
 

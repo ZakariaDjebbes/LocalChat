@@ -11,7 +11,16 @@ public class PromptService : IPromptService
         _consoleService = consoleService;
     }
 
-    public bool KeepPrompt { get; set; }
+    /// <summary>
+    ///    Whether to keep the prompt after the user has entered input.
+    ///    Default is true.
+    /// </summary>
+    public bool KeepPrompt { get; set; } = true;
+
+    /// <summary>
+    ///   The color of the prompt.
+    ///  Default is white.
+    /// </summary>
     public ConsoleColor PromptColor { get; set; } = ConsoleColor.White;
 
     public T Prompt<T>(string promptMessage)

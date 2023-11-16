@@ -20,7 +20,7 @@ internal class Program
             var services = scope.ServiceProvider;
             var loggerFactory = services.GetRequiredService<ILoggerFactory>();
             var logger = loggerFactory.CreateLogger<Program>();
-            var consoleService = services.GetRequiredService<IConsoleService>();
+            services.GetRequiredService<IConsoleService>();
 
             try
             {
@@ -29,7 +29,6 @@ internal class Program
                 context.Database.Migrate();
                 logger.LogInformation("Seeding the database if empty...");
                 LocalChatDbContextSeed.Seed(context, loggerFactory);
-                consoleService.Clear();
             }
             catch (Exception ex)
             {

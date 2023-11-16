@@ -1,31 +1,42 @@
-﻿using System.Net.Sockets;
+﻿using System.Net;
+using System.Net.Sockets;
+using Core.Model;
 
 namespace Core.Context;
 
 public class ServerContextResource : DisposableResource
 {
     /// <summary>
-    /// The current <see cref="System.Net.Sockets.TcpListener"/> instance.
+    /// The servers currently registered in the context.
     /// </summary>
-    public TcpListener TcpListener { get; private set; }
-    
+    public IDictionary<Server, TcpListener> Servers { get; } = new Dictionary<Server, TcpListener>();
+
     /// <summary>
     /// Creates a new instance of the <see cref="ServerContextResource"/> class.
     /// </summary>
-    /// <param name="tcpListener">
-    /// The current <see cref="TcpListener"/> instance.
-    /// </param>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown when the <paramref name="tcpListener"/> is null.
-    /// </exception>
-    public ServerContextResource(TcpListener tcpListener) 
-        => TcpListener = tcpListener ?? throw new ArgumentNullException(nameof(tcpListener));
+    public ServerContextResource()
+    {
+    }
+
+    public TcpListener Add(Server server)
+    {
+        var listener = new TcpListener(IPAddress.Parse(server.Address), server.Port);
+        Servers.Add(server, listener);
+        return listener;
+    }
+
+    public void Remove(Server server)
+        => Servers.Remove(server);
 
     protected override void Dispose(bool disposing)
     {
         if (!disposing) return;
-        
-        TcpListener.Stop();
-        TcpListener = null;
+
+        foreach (var (_, tcpListener) in Servers)
+        {
+            tcpListener.Stop();
+        }
+
+        Servers.Clear();
     }
 }

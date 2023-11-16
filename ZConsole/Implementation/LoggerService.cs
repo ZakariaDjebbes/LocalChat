@@ -10,30 +10,27 @@ public class LoggerService : ILoggerService
     public LoggerService(IConsoleService consoleService)
     {
         _consoleService = consoleService;
-        ShowTimestamp = true;
-        ShowLevel = true;
-        TimestampFormat = "yyyy-MM-dd HH:mm:ss";
     }
     
     /// <summary>
     ///   Whether to show the timestamp in the log messages.
     ///   Default is true.
     /// </summary>
-    public bool ShowTimestamp { get; set; }
+    public bool ShowTimestamp { get; set; } = true;
     
     /// <summary>
     /// The format of the timestamp.
     /// Default is "yyyy-MM-dd HH:mm:ss".
     /// </summary>
-    public string TimestampFormat { get; set; }
-    
+    public string TimestampFormat { get; set; } = "yyyy-MM-dd HH:mm:ss";
+
     /// <summary>
     ///  Whether to show the log level in the log messages.
     /// Default is true.
     /// </summary>
-    public bool ShowLevel { get; set; }
+    public bool ShowLevel { get; set; } = true;
 
-    
+
     public void LogCustom(string message, LogLevel level)
     {
         var timestamp = ShowTimestamp 

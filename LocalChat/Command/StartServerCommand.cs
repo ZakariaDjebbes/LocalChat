@@ -3,7 +3,6 @@ using Core.Command;
 using Core.Context;
 using Core.Model;
 using Core.Repository;
-using Core.Service;
 using ZConsole.Service;
 
 namespace LocalChat.Command;
@@ -14,13 +13,13 @@ public class StartServerCommand : ICommand
     private readonly IPromptService _promptService;
     private readonly IRepository<Server> _serverRepository;
     private readonly IUserContext _userContext;
-    private readonly IServerService _serverService;
+    private readonly IServerContext _serverContext;
 
     public StartServerCommand(IRepository<Server> serverRepository,
         ILoggerService loggerService,
         IPromptService promptService,
-        IServerService serverService,
-        IUserContext userContext)
+        IUserContext userContext, 
+        IServerContext serverContext)
     {
         Name = "start-server";
         Description = "Start a server";
@@ -30,8 +29,8 @@ public class StartServerCommand : ICommand
         _serverRepository = serverRepository;
         _loggerService = loggerService;
         _promptService = promptService;
-        _serverService = serverService;
         _userContext = userContext;
+        _serverContext = serverContext;
     }
 
     public string Name { get; }
@@ -52,17 +51,19 @@ public class StartServerCommand : ICommand
         if (server.IsRunning)
         {
             _loggerService.LogError("Server is already running!");
+            return;
         }
         
+        _serverContext.Start(server);
+        
         _loggerService.LogSuccess($"Starting server {server.Name}...");
-        _serverService.Initialize(server);
-        _serverService.Start();
         _loggerService.LogSuccess($"Server {server.Name} started!");
     }
 
     private IEnumerable<Server> GetServersOwnedByUser(IEntity user)
     {
-        var servers = _serverRepository.GetAllWithInclude("UserRolesInServers",
+        var servers = _serverRepository.GetAllWithInclude(
+            "UserRolesInServers",
             "UserRolesInServers.Role",
             "UserRolesInServers.User");
 

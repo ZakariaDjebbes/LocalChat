@@ -43,10 +43,10 @@ public class GetServersCommand : ICommand
 
     private List<Server> GetServersOwnedByUser(IEntity user)
     {
-        var servers = _serverRepository.GetAllWithInclude(x =>
-                x.UserRolesInServers,
-            x => x.UserRolesInServers.Select(y => y.Role),
-            x => x.UserRolesInServers.Select(y => y.User));
+        var servers = _serverRepository.GetAllWithInclude(
+            "UserRolesInServers",
+            "UserRolesInServers.Role",
+            "UserRolesInServers.User");
 
         var serversOfUser = servers.Where(x
             => x.UserRolesInServers.Any(y => y.UserId == user.Id && y.Role.Name == "Owner"));
