@@ -29,6 +29,27 @@ public interface IConsoleService
     void WriteCustom(string message, ConsoleColor color, bool newLine = true);
         
     /// <summary>
+    ///    Writes the specified strings values to the standard output stream.
+    ///     The strings will be colored with the corresponding colors.
+    /// </summary>
+    /// <param name="messages">
+    ///   The values to write.
+    /// </param>
+    /// <param name="colors">
+    ///  The colors of the text.
+    /// </param>
+    /// <param name="newLine">
+    /// Whether to write a new line after the message. Default is true.
+    /// </param>
+    /// <exception cref="NullReferenceException">
+    ///  Thrown if <paramref name="messages"/> or <paramref name="colors"/> is null.
+    /// </exception>
+    /// <exception cref="ArgumentException">
+    /// Thrown if the number of messages and colors is not the same.
+    /// </exception>
+    void WriteCustom(IEnumerable<string> messages, IEnumerable<ConsoleColor> colors, bool newLine = true);
+    
+    /// <summary>
     ///    Writes the specified string value to the standard output stream with a default color.
     /// </summary>
     /// <param name="message">

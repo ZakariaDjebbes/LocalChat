@@ -15,6 +15,8 @@ public abstract class EntityConfiguration<T> : IEntityTypeConfiguration<T> where
         builder.Property(d => d.Id)
             .HasMaxLength(36);
         builder.HasKey(d => d.Id);
+        builder.Property(d => d.Id)
+            .HasMaxLength(36);
     }
 
     protected abstract void Configure(EntityTypeBuilder<T> builder);

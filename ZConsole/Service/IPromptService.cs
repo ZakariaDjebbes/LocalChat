@@ -25,6 +25,23 @@ public interface IPromptService
     T Prompt<T>(string promptMessage);
     
     /// <summary>
+    ///    Prompts the user for input and converts it to a specific type.
+    /// </summary>
+    /// <param name="promptMessage">
+    ///   The message to display to the user.
+    /// </param>
+    /// <param name="input">
+    ///  The user's input converted to the specified type.
+    /// </param>
+    /// <typeparam name="T">
+    /// The type to which the user's input will be converted.
+    /// </typeparam>
+    /// <returns>
+    /// True if the user's input was successfully converted to the specified type; otherwise, false.
+    /// </returns>
+    bool TryPrompt<T>(string promptMessage, out T input);
+    
+    /// <summary>
     ///     Prompts the user for input and converts it to a specific type using a custom converter.
     /// </summary>
     /// <typeparam name="T">The type to which the user's input will be converted.</typeparam>

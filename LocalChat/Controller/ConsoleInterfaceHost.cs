@@ -23,10 +23,9 @@ public class ConsoleInterfaceHost : IHostedService
         _loggerService.LogInfo("Welcome to LocalChat!");
         _loggerService.LogInfo("Type 'help' to see a list of commands.");
         
-        while (true)
+        while (_promptService.TryPrompt("[LocalChat]>", out string input))
             try
             {
-                var input = _promptService.Prompt("[LocalChat]>");
                 if (input == "help") _loggerService.Log(_commandExecutor.ToString());
                 else if (input == "exit") break;
                 else _commandExecutor.Execute(input);

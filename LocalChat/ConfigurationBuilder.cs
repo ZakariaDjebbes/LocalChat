@@ -43,7 +43,7 @@ public class ConfigurationBuilder
     {
         services.AddDbContextFactory<LocalChatDbContext>(ctx =>
         {
-            ctx.UseSqlite(_config.GetConnectionString("LocalChatDbConnection"));
+            ctx.UseMySql(_config.GetConnectionString("LocalChatDbConnection"), new MySqlServerVersion(new Version(8,2,0)));
         });
         
         // Context
@@ -75,6 +75,7 @@ public class ConfigurationBuilder
         services.AddScoped<ICommand, CreateServerCommand>();
         services.AddScoped<ICommand, GetServersCommand>();
         services.AddScoped<ICommand, StartServerCommand>();
+        services.AddScoped<ICommand, StopServerCommand>();
 
         // Repository services
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

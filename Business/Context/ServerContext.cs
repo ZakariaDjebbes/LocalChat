@@ -12,7 +12,6 @@ public class ServerContext : IServerContext
 {
     private readonly ILogger<ServerContext> _logger;
     private readonly IServerService _serverService;
-    private readonly IRepository<Server> _serverRepository;
 
     public ServerContext(IServiceProvider serviceProvider)
     {
@@ -20,7 +19,6 @@ public class ServerContext : IServerContext
         ContextResource = new ServerContextResource();
         _logger = serviceProvider.GetRequiredService<ILogger<ServerContext>>();
         _serverService = serviceProvider.GetRequiredService<IServerService>();
-        _serverRepository = serviceProvider.GetRequiredService<IRepository<Server>>();
     }
 
     public Guid ContextId { get; init; }
@@ -34,27 +32,11 @@ public class ServerContext : IServerContext
 
     public Task Start(Server server)
     {
-        if (server.IsRunning)
-        {
-            _logger.LogWarning("Server is already running");
-            return Task.CompletedTask;
-        }
-        
         var listener = ContextResource.Add(server);
-
-        if (listener.Server.IsBound)
-        {
-            _logger.LogCritical("TcpListener is already bound");
-            return Task.CompletedTask;
-        }
 
         try
         {
             listener.Start();
-            var serverFromRepo = _serverRepository.GetById(server.Id);
-            serverFromRepo.IsRunning = true;
-            _serverRepository.Update(serverFromRepo);
-            _serverRepository.Commit();
             _logger.LogInformation("TcpListener started");
         }
         catch (SocketException e)
@@ -74,23 +56,13 @@ public class ServerContext : IServerContext
         
         if (listener == null)
         {
-            _logger.LogError("TcpListener is null");
-            return Task.CompletedTask;
-        }
-
-        if (!listener.Server.IsBound)
-        {
-            _logger.LogWarning("TcpListener is not bound");
+            _logger.LogError("No TcpListener found for server {ServerName}", server.Name);
             return Task.CompletedTask;
         }
 
         try
         {
             listener.Stop();
-            var serverFromRepo = _serverRepository.GetById(server.Id);
-            serverFromRepo.IsRunning = false;
-            _serverRepository.Update(serverFromRepo);
-            _serverRepository.Commit();
             _logger.LogInformation("TcpListener stopped");
         }
         catch (SocketException e)

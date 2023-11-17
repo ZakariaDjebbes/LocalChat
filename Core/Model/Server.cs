@@ -20,11 +20,6 @@ public class Server : IEntity
     /// </summary>
     public int Port { get; init; }
 
-    /// <summary>
-    ///     The status of the server.
-    /// </summary>
-    public bool IsRunning { get; set; }
-
     public ICollection<UserRoleInServer> UserRolesInServers { get; set; } = new List<UserRoleInServer>();
     public Guid Id { get; init; }
     public DateTime CreatedAt { get; set; }

@@ -34,6 +34,26 @@ public class PromptService : IPromptService
         return (T)Convert.ChangeType(input, typeof(T));
     }
 
+    public bool TryPrompt<T>(string promptMessage, out T input)
+    {
+        _consoleService.WriteCustom(promptMessage, PromptColor, false);
+        var inputString = _consoleService.ReadLine();
+
+        if (!KeepPrompt)
+            _consoleService.Clear();
+
+        try
+        {
+            input = (T)Convert.ChangeType(inputString, typeof(T));
+            return true;
+        }
+        catch
+        {
+            input = default;
+            return false;
+        }
+    }
+
     public T PromptOrDefault<T>(string promptMessage)
     {
         _consoleService.WriteCustom(promptMessage, PromptColor, false);

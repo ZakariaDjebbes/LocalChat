@@ -49,6 +49,21 @@ public class ConsoleService : IConsoleService
         Console.ResetColor();
     }
 
+    public void WriteCustom(IEnumerable<string> messages, IEnumerable<ConsoleColor> colors, bool newLine = true)
+    {
+        if (messages == null) throw new ArgumentNullException(nameof(messages));
+        if (colors == null) throw new ArgumentNullException(nameof(colors));
+        
+        var messageArray = messages.ToArray();
+        var colorArray = colors.ToArray();
+
+        if (messageArray.Length != colorArray.Length)
+            throw new ArgumentException("The number of messages and colors must be the same.");
+
+        for (var i = 0; i < messageArray.Length; i++)
+            WriteCustom(messageArray[i], colorArray[i], newLine);
+    }
+
     public void Write(string message, bool newLine = true)
         => WriteCustom(message, ConsoleColor.White, newLine);
 
