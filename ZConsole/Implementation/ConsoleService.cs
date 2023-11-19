@@ -5,13 +5,15 @@ namespace ZConsole.Implementation;
 
 public class ConsoleService : IConsoleService
 {
-    public string ReadLine() 
-        => Console.ReadLine() ?? string.Empty;
+    public string ReadLine()
+    {
+        return Console.ReadLine() ?? string.Empty;
+    }
 
     public string ReadPassword(char mask = '*')
     {
         var pwd = new SecureString();
-        
+
         while (true)
         {
             var i = Console.ReadKey(true);
@@ -53,7 +55,7 @@ public class ConsoleService : IConsoleService
     {
         if (messages == null) throw new ArgumentNullException(nameof(messages));
         if (colors == null) throw new ArgumentNullException(nameof(colors));
-        
+
         var messageArray = messages.ToArray();
         var colorArray = colors.ToArray();
 
@@ -65,11 +67,17 @@ public class ConsoleService : IConsoleService
     }
 
     public void Write(string message, bool newLine = true)
-        => WriteCustom(message, ConsoleColor.White, newLine);
+    {
+        WriteCustom(message, ConsoleColor.White, newLine);
+    }
 
-    public void BreakLine() 
-        => Console.WriteLine();
+    public void BreakLine()
+    {
+        Console.WriteLine();
+    }
 
     public void Clear()
-        => Console.Clear();
+    {
+        Console.Clear();
+    }
 }

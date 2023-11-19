@@ -46,8 +46,8 @@ internal class Program
                 =>
             {
                 var environmentName = context.HostingEnvironment.EnvironmentName.ToLower();
-                config.AddJsonFile($"appsettings.json", optional: false, reloadOnChange: true)
-                    .AddJsonFile($"appsettings.{environmentName}.json", optional: true, reloadOnChange: true);
+                config.AddJsonFile("appsettings.json", false, true)
+                    .AddJsonFile($"appsettings.{environmentName}.json", true, true);
             })
             .ConfigureServices((hostContext, services) =>
             {

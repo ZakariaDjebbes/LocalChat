@@ -1,4 +1,5 @@
-﻿using Core.Auth;
+﻿using Business.Context.Resources;
+using Core.Auth;
 using Core.Command;
 using Core.Context;
 using Core.Service;
@@ -9,14 +10,14 @@ namespace LocalChat.Command;
 public class SignInCommand : ICommand
 {
     private readonly IAuthenticationService _authenticationService;
-    private readonly IPromptService _promptService;
     private readonly ILoggerService _loggerService;
-    private readonly IUserContext _userContext;
+    private readonly IPromptService _promptService;
+    private readonly IUserContext<UserContextResource> _userContext;
 
     public SignInCommand(ILoggerService loggerService,
         IPromptService promptService,
         IAuthenticationService authenticationService,
-        IUserContext userContext)
+        IUserContext<UserContextResource> userContext)
     {
         Name = "sign-in";
         Description = "Signs in a user.";

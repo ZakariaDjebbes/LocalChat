@@ -6,15 +6,15 @@
 public interface IPromptService
 {
     /// <summary>
-    ///    The color of the prompt message.
+    ///     The color of the prompt message.
     /// </summary>
     public ConsoleColor PromptColor { get; set; }
-    
+
     /// <summary>
-    /// Should the prompt message be kept on the screen after the user has made a selection.
+    ///     Should the prompt message be kept on the screen after the user has made a selection.
     /// </summary>
     public bool KeepPrompt { get; set; }
-    
+
     /// <summary>
     ///     Prompts the user for input and converts it to a specific type.
     /// </summary>
@@ -23,24 +23,24 @@ public interface IPromptService
     /// <returns>The user's input converted to the specified type.</returns>
     /// <exception cref="FormatException">Thrown if the user's input cannot be converted to the specified type.</exception>
     T Prompt<T>(string promptMessage);
-    
+
     /// <summary>
-    ///    Prompts the user for input and converts it to a specific type.
+    ///     Prompts the user for input and converts it to a specific type.
     /// </summary>
     /// <param name="promptMessage">
-    ///   The message to display to the user.
+    ///     The message to display to the user.
     /// </param>
     /// <param name="input">
-    ///  The user's input converted to the specified type.
+    ///     The user's input converted to the specified type.
     /// </param>
     /// <typeparam name="T">
-    /// The type to which the user's input will be converted.
+    ///     The type to which the user's input will be converted.
     /// </typeparam>
     /// <returns>
-    /// True if the user's input was successfully converted to the specified type; otherwise, false.
+    ///     True if the user's input was successfully converted to the specified type; otherwise, false.
     /// </returns>
     bool TryPrompt<T>(string promptMessage, out T input);
-    
+
     /// <summary>
     ///     Prompts the user for input and converts it to a specific type using a custom converter.
     /// </summary>
@@ -62,7 +62,7 @@ public interface IPromptService
     ///     is provided.
     /// </returns>
     T PromptOrDefault<T>(string promptMessage, Func<string, T> converter);
-    
+
     /// <summary>
     ///     Prompts the user for input.
     /// </summary>
@@ -82,7 +82,7 @@ public interface IPromptService
     /// </returns>
     /// <exeception cref="FormatException">Thrown if the user's input cannot be converted to the specified type.</exeception>
     string Password(string promptMessage);
-    
+
     /// <summary>
     ///     Prompts the user for input with a default value.
     /// </summary>
@@ -108,7 +108,7 @@ public interface IPromptService
     /// <param name="promptMessage">The message to display to the user.</param>
     /// <returns>The user's input converted to the specified type or the default value if no input is provided.</returns>
     T PromptOrDefault<T>(string promptMessage);
-    
+
     /// <summary>
     ///     Presents the user with a choice of options and allows them to select one.
     /// </summary>
@@ -126,74 +126,74 @@ public interface IPromptService
     /// <returns>The index of the selected choice.</returns>
     /// <exception cref="IndexOutOfRangeException">Thrown if the user selects an out-of-range index.</exception>
     int Choose(string promptMessage, params string[] choices);
-    
+
     /// <summary>
-    ///    Presents the user with a choice of options and allows them to select one.
+    ///     Presents the user with a choice of options and allows them to select one.
     /// </summary>
     /// <param name="promptMessage">
-    ///    The message to display to the user.
+    ///     The message to display to the user.
     /// </param>
     /// <param name="choices">
-    ///   A collection of strings representing the available choices.
+    ///     A collection of strings representing the available choices.
     /// </param>
     /// <returns>
     ///     The string value of the selected choice.
     /// </returns>
     string ChooseValue(string promptMessage, IEnumerable<string> choices);
-    
+
     /// <summary>
-    ///   Presents the user with a choice of options and allows them to select one or more.
+    ///     Presents the user with a choice of options and allows them to select one or more.
     /// </summary>
     /// <param name="promptMessage">
-    ///   The message to display to the user.
+    ///     The message to display to the user.
     /// </param>
     /// <param name="choices">
-    ///  A collection of strings representing the available choices.
+    ///     A collection of strings representing the available choices.
     /// </param>
     /// <returns>
-    ///  The index of the selected choice.
+    ///     The index of the selected choice.
     /// </returns>
     IEnumerable<int> ChooseMultiple(string promptMessage, IEnumerable<string> choices);
-    
+
     /// <summary>
-    ///  Presents the user with a choice of options and allows them to select one or more.
+    ///     Presents the user with a choice of options and allows them to select one or more.
     /// </summary>
     /// <param name="promptMessage">
-    ///  The message to display to the user.
+    ///     The message to display to the user.
     /// </param>
     /// <param name="choices">
-    /// A params array of strings representing the available choices.
+    ///     A params array of strings representing the available choices.
     /// </param>
     /// <returns>
-    /// The index values of the selected choices.
+    ///     The index values of the selected choices.
     /// </returns>
     IEnumerable<int> ChooseMultiple(string promptMessage, params string[] choices);
-    
+
     /// <summary>
-    ///  Presents the user with a choice of options and allows them to select one or more.
+    ///     Presents the user with a choice of options and allows them to select one or more.
     /// </summary>
     /// <param name="promptMessage">
-    ///   The message to display to the user.
+    ///     The message to display to the user.
     /// </param>
     /// <param name="choices">
-    ///   A collection of strings representing the available choices.
+    ///     A collection of strings representing the available choices.
     /// </param>
     /// <returns>
-    ///  The string values of the selected choices.
+    ///     The string values of the selected choices.
     /// </returns>
     IEnumerable<string> ChooseValues(string promptMessage, IEnumerable<string> choices);
-    
+
     /// <summary>
-    /// Presents the user with a choice of options and allows them to select one or more.
+    ///     Presents the user with a choice of options and allows them to select one or more.
     /// </summary>
     /// <param name="promptMessage">
-    ///  The message to display to the user.
+    ///     The message to display to the user.
     /// </param>
     /// <param name="choices">
-    /// A params array of strings representing the available choices.
+    ///     A params array of strings representing the available choices.
     /// </param>
     /// <returns>
-    /// The string values of the selected choices.
+    ///     The string values of the selected choices.
     /// </returns>
     IEnumerable<string> ChooseValues(string promptMessage, params string[] choices);
 }

@@ -1,36 +1,37 @@
-﻿using Core.Auth;
+using Business.Context.Resources;
+using Core.Auth;
 using Core.Command;
 using Core.Context;
 using Core.Model;
 using Core.Repository;
 using ZConsole.Service;
 
-namespace LocalChat.Command;
+namespace LocalChat.Command.ServerCommands;
 
-public class StartServerCommand : ICommand
+public class StopServerCommand : ICommand
 {
     private readonly ILoggerService _loggerService;
     private readonly IPromptService _promptService;
+    private readonly IServerContext<ServerContextResource> _serverContext;
     private readonly IRepository<Server> _serverRepository;
-    private readonly IUserContext _userContext;
-    private readonly IServerContext _serverContext;
+    private readonly IUserContext<UserContextResource> _userContext;
 
-    public StartServerCommand(IRepository<Server> serverRepository,
-        ILoggerService loggerService,
+    public StopServerCommand(ILoggerService loggerService,
         IPromptService promptService,
-        IUserContext userContext, 
-        IServerContext serverContext)
+        IServerContext<ServerContextResource> serverContext,
+        IRepository<Server> serverRepository,
+        IUserContext<UserContextResource> userContext)
     {
-        Name = "start-server";
-        Description = "Start a server";
-        Aliases = new[] { "ss" };
+        Name = "stop-server";
+        Description = "Stop a server";
+        Aliases = new List<string>().ToArray();
         AuthenticationRequirement = AuthenticationRequirement.Authenticated;
 
-        _serverRepository = serverRepository;
         _loggerService = loggerService;
         _promptService = promptService;
-        _userContext = userContext;
         _serverContext = serverContext;
+        _serverRepository = serverRepository;
+        _userContext = userContext;
     }
 
     public string Name { get; }
@@ -45,14 +46,14 @@ public class StartServerCommand : ICommand
 
         var serverIndex = _promptService.Choose("Which Server to start?",
             servers.Select(x => x.Name));
-        
+
         var server = servers[serverIndex];
 
-        _loggerService.LogSuccess($"Starting server {server.Name}...");
+        _loggerService.LogSuccess($"Stopping server {server.Name}...");
 
-        _serverContext.Start(server);
-        
-        _loggerService.LogSuccess($"Server {server.Name} started!");
+        _serverContext.Stop(server);
+
+        _loggerService.LogSuccess($"Server {server.Name} stopped!");
     }
 
     private IEnumerable<Server> GetServersOwnedByUser(IEntity user)

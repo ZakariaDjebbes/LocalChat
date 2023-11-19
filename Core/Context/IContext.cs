@@ -9,7 +9,7 @@
 public interface IContext<T> where T : IDisposable
 {
     /// <summary>
-    ///    The unique identifier of the context.
+    ///     The unique identifier of the context.
     /// </summary>
     public Guid ContextId { get; init; }
 

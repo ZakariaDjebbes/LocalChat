@@ -10,4 +10,10 @@
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="Tcp.NET.Server">
+        <HintPath>..\..\..\..\.nuget\packages\tcp.net.server\6.0.75\lib\net6.0\Tcp.NET.Server.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>

@@ -1,4 +1,5 @@
-﻿using Core.Auth;
+﻿using Business.Context.Resources;
+using Core.Auth;
 using Core.Command;
 using Core.Context;
 using ZConsole.Service;
@@ -9,9 +10,9 @@ public class WhoAmICommand : ICommand
 {
     private readonly ILoggerService _loggerService;
 
-    private readonly IUserContext _userContext;
+    private readonly IUserContext<UserContextResource> _userContext;
 
-    public WhoAmICommand(IUserContext userContext,
+    public WhoAmICommand(IUserContext<UserContextResource> userContext,
         ILoggerService loggerService)
     {
         Name = "whoami";

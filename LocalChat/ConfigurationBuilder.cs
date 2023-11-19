@@ -1,4 +1,5 @@
 ﻿using Business.Context;
+using Business.Context.Resources;
 using Business.Service;
 using Core.Command;
 using Core.Context;
@@ -7,6 +8,8 @@ using Core.Service;
 using Infrastructure;
 using Infrastructure.Repository;
 using LocalChat.Command;
+using LocalChat.Command.ClientCommands;
+using LocalChat.Command.ServerCommands;
 using LocalChat.Controller;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -43,13 +46,15 @@ public class ConfigurationBuilder
     {
         services.AddDbContextFactory<LocalChatDbContext>(ctx =>
         {
-            ctx.UseMySql(_config.GetConnectionString("LocalChatDbConnection"), new MySqlServerVersion(new Version(8,2,0)));
+            ctx.UseMySql(_config.GetConnectionString("LocalChatDbConnection"),
+                new MySqlServerVersion(new Version(8, 2, 0)));
         });
-        
+
         // Context
-        services.AddSingleton<IUserContext, UserContext>();
-        services.AddSingleton<IServerContext, ServerContext>();
-        
+        services.AddSingleton(typeof(IUserContext<UserContextResource>), typeof(UserContext));
+        services.AddSingleton(typeof(IServerContext<ServerContextResource>), typeof(ServerContext));
+        services.AddSingleton(typeof(IClientContext<ClientContextResource>), typeof(ClientContext));
+
         // Runners
         services.AddHostedService<ConsoleInterfaceHost>();
 
@@ -57,9 +62,6 @@ public class ConfigurationBuilder
         services.AddScoped<IConsoleService, ConsoleService>();
         services.AddScoped<IPromptService, PromptService>();
         services.AddScoped<ILoggerService, LoggerService>();
-
-        // Server services 
-        services.AddScoped<IServerService, ServerService>();
 
         // Authentication services
         services.AddScoped<IAuthenticationService, AuthenticationService>();
@@ -76,7 +78,8 @@ public class ConfigurationBuilder
         services.AddScoped<ICommand, GetServersCommand>();
         services.AddScoped<ICommand, StartServerCommand>();
         services.AddScoped<ICommand, StopServerCommand>();
-
+        services.AddScoped<ICommand, ConnectToServerCommand>();
+        
         // Repository services
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
     }

@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Business.Context.Resources;
 using Core.Auth;
 using Core.Command;
 using Core.Context;
@@ -10,11 +11,11 @@ public class CommandExecutor : ICommandExecutor
 {
     private readonly IEnumerable<ICommand> _commands;
     private readonly ILoggerService _loggerService;
-    private readonly IUserContext _userContext;
+    private readonly IUserContext<UserContextResource> _userContext;
 
     public CommandExecutor(IEnumerable<ICommand> commands,
         ILoggerService loggerService,
-        IUserContext userContext)
+        IUserContext<UserContextResource> userContext)
     {
         _loggerService = loggerService;
         _commands = commands;
@@ -24,7 +25,7 @@ public class CommandExecutor : ICommandExecutor
     public void Execute(string commandName, params object[] args)
     {
         var command = _commands.FirstOrDefault(c => c.Name == commandName || c.Aliases.Contains(commandName));
-        
+
         if (command == null)
         {
             _loggerService.LogError($"Command '{commandName}' not found.");
@@ -33,11 +34,11 @@ public class CommandExecutor : ICommandExecutor
 
         switch (command.AuthenticationRequirement)
         {
-            case AuthenticationRequirement.Authenticated 
+            case AuthenticationRequirement.Authenticated
                 when !_userContext.IsAuthenticated():
                 _loggerService.LogError("You must be authenticated to execute this command.");
                 return;
-            case AuthenticationRequirement.Unauthenticated 
+            case AuthenticationRequirement.Unauthenticated
                 when _userContext.IsAuthenticated():
                 _loggerService.LogError("You are already authenticated.");
                 return;

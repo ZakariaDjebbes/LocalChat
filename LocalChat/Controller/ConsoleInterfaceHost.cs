@@ -8,8 +8,8 @@ namespace LocalChat.Controller;
 public class ConsoleInterfaceHost : IHostedService
 {
     private readonly ICommandExecutor _commandExecutor;
-    private readonly IPromptService _promptService;
     private readonly ILoggerService _loggerService;
+    private readonly IPromptService _promptService;
 
     public ConsoleInterfaceHost(IServiceProvider serviceProvider)
     {
@@ -22,7 +22,7 @@ public class ConsoleInterfaceHost : IHostedService
     {
         _loggerService.LogInfo("Welcome to LocalChat!");
         _loggerService.LogInfo("Type 'help' to see a list of commands.");
-        
+
         while (_promptService.TryPrompt("[LocalChat]>", out string input))
             try
             {

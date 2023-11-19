@@ -1,21 +1,22 @@
-﻿using Core.Auth;
+﻿using Business.Context.Resources;
+using Core.Auth;
 using Core.Command;
 using Core.Context;
 using Core.Model;
 using Core.Repository;
 using ZConsole.Service;
 
-namespace LocalChat.Command;
+namespace LocalChat.Command.ServerCommands;
 
 public class GetServersCommand : ICommand
 {
     private readonly ILoggerService _loggerService;
     private readonly IRepository<Server> _serverRepository;
-    private readonly IUserContext _userContext;
+    private readonly IUserContext<UserContextResource> _userContext;
 
     public GetServersCommand(IRepository<Server> serverRepository,
         ILoggerService loggerService,
-        IUserContext userContext)
+        IUserContext<UserContextResource> userContext)
     {
         Name = "get-servers";
         Description = "Get the servers owned by the current user";

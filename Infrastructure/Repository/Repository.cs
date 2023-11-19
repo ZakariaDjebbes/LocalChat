@@ -44,7 +44,7 @@ public class Repository<T> : IRepository<T> where T : class, IEntity
                     => current.Include(includeProperty));
         return query.ToList();
     }
-    
+
     public IEnumerable<T> GetAllWithInclude(params string[] includeProperties)
     {
         var query = _dbContext.Set<T>().AsNoTracking();

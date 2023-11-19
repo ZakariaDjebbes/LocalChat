@@ -1,7 +1,7 @@
 ﻿namespace Core.Command;
 
 /// <summary>
-///   A service that provides command execution functionality.
+///     A service that provides command execution functionality.
 /// </summary>
 public interface IConfigurableExecutor : ICommandExecutor
 {

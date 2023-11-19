@@ -1,4 +1,5 @@
-﻿using Core.Auth;
+﻿using Business.Context.Resources;
+using Core.Auth;
 using Core.Command;
 using Core.Context;
 using ZConsole.Service;
@@ -8,9 +9,9 @@ namespace LocalChat.Command;
 public class SignOutCommand : ICommand
 {
     private readonly ILoggerService _loggerService;
-    private readonly IUserContext _userContext;
+    private readonly IUserContext<UserContextResource> _userContext;
 
-    public SignOutCommand(IUserContext userContext, 
+    public SignOutCommand(IUserContext<UserContextResource> userContext,
         ILoggerService loggerService)
     {
         Name = "sign-out";

@@ -8,8 +8,8 @@ namespace LocalChat.Command;
 public class SignUpCommand : ICommand
 {
     private readonly IAuthenticationService _authenticationService;
-    private readonly IPromptService _promptService;
     private readonly ILoggerService _loggerService;
+    private readonly IPromptService _promptService;
 
     public SignUpCommand(ILoggerService loggerService,
         IPromptService promptService,

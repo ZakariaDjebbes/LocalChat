@@ -12,14 +12,14 @@ public class PromptService : IPromptService
     }
 
     /// <summary>
-    ///    Whether to keep the prompt after the user has entered input.
-    ///    Default is true.
+    ///     Whether to keep the prompt after the user has entered input.
+    ///     Default is true.
     /// </summary>
     public bool KeepPrompt { get; set; } = true;
 
     /// <summary>
-    ///   The color of the prompt.
-    ///  Default is white.
+    ///     The color of the prompt.
+    ///     Default is white.
     /// </summary>
     public ConsoleColor PromptColor { get; set; } = ConsoleColor.White;
 
@@ -110,7 +110,9 @@ public class PromptService : IPromptService
     }
 
     public string Prompt(string promptMessage)
-        => Prompt<string>(promptMessage);
+    {
+        return Prompt<string>(promptMessage);
+    }
 
     public string Password(string promptMessage)
     {
@@ -123,7 +125,9 @@ public class PromptService : IPromptService
     }
 
     public string PromptOrDefault(string promptMessage)
-        => PromptOrDefault<string>(promptMessage);
+    {
+        return PromptOrDefault<string>(promptMessage);
+    }
 
     public string PromptPasswordOrDefault(string promptMessage)
     {
@@ -197,7 +201,9 @@ public class PromptService : IPromptService
     }
 
     public int Choose(string promptMessage, params string[] choices)
-        => Choose(promptMessage, choices.AsEnumerable());
+    {
+        return Choose(promptMessage, choices.AsEnumerable());
+    }
 
     public string ChooseValue(string promptMessage, IEnumerable<string> choices)
     {
@@ -262,7 +268,9 @@ public class PromptService : IPromptService
     }
 
     public IEnumerable<int> ChooseMultiple(string promptMessage, params string[] choices)
-        => ChooseMultiple(promptMessage, choices.AsEnumerable());
+    {
+        return ChooseMultiple(promptMessage, choices.AsEnumerable());
+    }
 
     public IEnumerable<string> ChooseValues(string promptMessage, IEnumerable<string> choices)
     {
@@ -272,5 +280,7 @@ public class PromptService : IPromptService
     }
 
     public IEnumerable<string> ChooseValues(string promptMessage, params string[] choices)
-        => ChooseValues(promptMessage, choices.AsEnumerable());
+    {
+        return ChooseValues(promptMessage, choices.AsEnumerable());
+    }
 }

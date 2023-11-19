@@ -27,44 +27,44 @@ public interface IConsoleService
     /// <param name="color">The color of the text.</param>
     /// <param name="newLine">Whether to write a new line after the message. Default is true.</param>
     void WriteCustom(string message, ConsoleColor color, bool newLine = true);
-        
+
     /// <summary>
-    ///    Writes the specified strings values to the standard output stream.
+    ///     Writes the specified strings values to the standard output stream.
     ///     The strings will be colored with the corresponding colors.
     /// </summary>
     /// <param name="messages">
-    ///   The values to write.
+    ///     The values to write.
     /// </param>
     /// <param name="colors">
-    ///  The colors of the text.
+    ///     The colors of the text.
     /// </param>
     /// <param name="newLine">
-    /// Whether to write a new line after the message. Default is true.
+    ///     Whether to write a new line after the message. Default is true.
     /// </param>
     /// <exception cref="NullReferenceException">
-    ///  Thrown if <paramref name="messages"/> or <paramref name="colors"/> is null.
+    ///     Thrown if <paramref name="messages" /> or <paramref name="colors" /> is null.
     /// </exception>
     /// <exception cref="ArgumentException">
-    /// Thrown if the number of messages and colors is not the same.
+    ///     Thrown if the number of messages and colors is not the same.
     /// </exception>
     void WriteCustom(IEnumerable<string> messages, IEnumerable<ConsoleColor> colors, bool newLine = true);
-    
+
     /// <summary>
-    ///    Writes the specified string value to the standard output stream with a default color.
+    ///     Writes the specified string value to the standard output stream with a default color.
     /// </summary>
     /// <param name="message">
-    ///   The value to write.
+    ///     The value to write.
     /// </param>
     /// <param name="newLine">
-    ///  Whether to write a new line after the message. Default is true.
+    ///     Whether to write a new line after the message. Default is true.
     /// </param>
     void Write(string message, bool newLine = true);
-    
+
     /// <summary>
-    ///    Writes the specified string value to the standard output stream with
+    ///     Writes the specified string value to the standard output stream with
     /// </summary>
     void BreakLine();
-    
+
     /// <summary>
     ///     Clears the console buffer and corresponding console window of display information.
     /// </summary>

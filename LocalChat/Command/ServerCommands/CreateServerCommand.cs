@@ -1,26 +1,27 @@
-﻿using Core.Auth;
+﻿using Business.Context.Resources;
+using Core.Auth;
 using Core.Command;
 using Core.Context;
 using Core.Model;
 using Core.Repository;
 using ZConsole.Service;
 
-namespace LocalChat.Command;
+namespace LocalChat.Command.ServerCommands;
 
 public class CreateServerCommand : ICommand
 {
-    private readonly IPromptService _promptService;
     private readonly ILoggerService _loggerService;
+    private readonly IPromptService _promptService;
     private readonly IRepository<Role> _roleRepository;
 
     private readonly IRepository<Server> _serverRepository;
-    private readonly IUserContext _userContext;
+    private readonly IUserContext<UserContextResource> _userContext;
 
     public CreateServerCommand(IRepository<Server> serverRepository,
         IRepository<Role> roleRepository,
         ILoggerService loggerService,
         IPromptService promptService,
-        IUserContext userContext)
+        IUserContext<UserContextResource> userContext)
     {
         Name = "create-server";
         Description = "Create a server for the current user";
