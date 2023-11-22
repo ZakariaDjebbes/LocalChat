@@ -17,11 +17,11 @@ public class ServerContextResource : DisposableResource
     ///     The servers currently registered in the context.
     /// </summary>
     public IDictionary<Server, SimpleTcpServer> Servers { get; } = new Dictionary<Server, SimpleTcpServer>();
-    
+
     public SimpleTcpServer Add(Server server)
     {
         var exists = Servers.Keys.FirstOrDefault(x => x.Id == server.Id);
-        
+
         if (exists is not null) return Servers[exists];
 
         var tcpListener = new SimpleTcpServer();
@@ -30,7 +30,10 @@ public class ServerContextResource : DisposableResource
         return tcpListener;
     }
 
-    public void Remove(Server server) => Servers.Remove(server);
+    public void Remove(Server server)
+    {
+        Servers.Remove(server);
+    }
 
     protected override void Dispose(bool disposing)
     {

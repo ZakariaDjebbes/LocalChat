@@ -10,7 +10,7 @@ using Infrastructure.Repository;
 using LocalChat.Command;
 using LocalChat.Command.ClientCommands;
 using LocalChat.Command.ServerCommands;
-using LocalChat.Controller;
+using LocalChat.Hots;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -54,6 +54,7 @@ public class ConfigurationBuilder
         services.AddSingleton(typeof(IUserContext<UserContextResource>), typeof(UserContext));
         services.AddSingleton(typeof(IServerContext<ServerContextResource>), typeof(ServerContext));
         services.AddSingleton(typeof(IClientContext<ClientContextResource>), typeof(ClientContext));
+        services.AddSingleton(typeof(IContext<ConsoleContextResource>), typeof(ConsoleContext));
 
         // Runners
         services.AddHostedService<ConsoleInterfaceHost>();
@@ -79,7 +80,7 @@ public class ConfigurationBuilder
         services.AddScoped<ICommand, StartServerCommand>();
         services.AddScoped<ICommand, StopServerCommand>();
         services.AddScoped<ICommand, ConnectToServerCommand>();
-        
+
         // Repository services
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
     }

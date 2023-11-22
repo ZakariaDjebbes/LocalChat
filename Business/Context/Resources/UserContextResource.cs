@@ -37,10 +37,10 @@ public class UserContextResource : DisposableResource
     public string Token { get; private set; }
 
     /// <summary>
-    /// The port on which the user is connected to the servers.
-    /// Default is 5000.
+    ///     The port on which the user is connected to the servers.
+    ///     Default is 5000.
     /// </summary>
-    public int Port { get; set; } = 5000;
+    public int Port { get; private set; } = 5000;
 
     protected override void Dispose(bool disposing)
     {

@@ -23,33 +23,38 @@ public class ServerContext : IServerContext<ServerContextResource>
     public Guid ContextId { get; init; }
     public ServerContextResource ContextResource { get; set; }
 
-    public void Clear() => ContextResource.Dispose();
+    public void Clear()
+    {
+        ContextResource.Dispose();
+    }
 
-    public void Set(ServerContextResource data) =>
+    public void Set(ServerContextResource data)
+    {
         ContextResource = data ?? throw new ArgumentNullException(nameof(data));
+    }
 
     public void Start(Server server)
     {
         var listener = ContextResource.Add(server);
 
-        if(listener == null)
+        if (listener == null)
         {
             _logger.LogError("TcpListener already exists for server {ServerName}", server.Name);
             return;
         }
-        
-        if(listener.IsStarted)
+
+        if (listener.IsStarted)
         {
             _logger.LogError("TcpListener already started for server {ServerName}", server.Name);
             return;
         }
-        
+
         try
         {
             listener.Start(IPAddress.Parse(server.Address), server.Port);
 
-            listener.ClientConnected += OnClientConnected;
-            listener.DataReceived += OnDataReceived;
+            listener.ClientConnected += (_, client) => OnClientConnected(listener, client);
+            listener.DataReceived += (_, msg) => OnDataReceived(listener, msg);
 
             _logger.LogInformation("TcpListener setup and started successfully");
         }
@@ -81,16 +86,19 @@ public class ServerContext : IServerContext<ServerContextResource>
             _logger.LogError("Error stopping TcpListener: {ErrorMessage}", e.Message);
         }
     }
-    
+
     private void OnDataReceived(object sender, Message msg)
     {
+        var listener = (SimpleTcpServer)sender;
         _logger.LogInformation("Received data from {@RemoteEndPoint}: {Data}",
             msg.TcpClient.Client.RemoteEndPoint, msg.Data);
-        msg.ReplyLine("You said: " + msg.MessageString);
+        listener.BroadcastLine("Someone said: " + msg.MessageString);
     }
-    
+
     private void OnClientConnected(object sender, TcpClient e)
     {
+        var listener = (SimpleTcpServer)sender;
+        listener.BroadcastLine($"{e.Client.RemoteEndPoint} connected");
         _logger.LogInformation("Client connected: {@RemoteEndPoint}", e.Client.RemoteEndPoint);
     }
 }
